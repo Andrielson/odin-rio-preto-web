@@ -1,5 +1,5 @@
 import { NextApiHandler } from "next";
-import { RestApiHandlers } from "./types/rest-api-handlers.type";
+import { RestApiHandlers } from "../types/rest-api-handlers.type";
 
 export function processRestApiHandlers(handlers: RestApiHandlers): NextApiHandler {
   const allowedMethods = Object.keys(handlers);
