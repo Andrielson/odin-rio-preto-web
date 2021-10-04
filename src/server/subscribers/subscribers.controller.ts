@@ -2,13 +2,17 @@ import { NextApiHandler } from "next";
 import { processRestApiHandlers } from "../common/process-api-handlers";
 import { CreateSubscriptionRequest } from "./dto/create-subscriber-request";
 import { createSubscriberRequestValidator } from "./dto/create-subscriber-request-validator";
+import { Subscriber } from "./subscriber.interface";
 import { SubscribersService } from "./subscribers-service.interface";
 import { SubscribersServiceImpl } from "./subscribers.service";
 
 export function SubscribersController(
   service: SubscribersService = SubscribersServiceImpl()
 ): NextApiHandler {
-  const GET: NextApiHandler<void> = (_, r) => r.status(204).end();
+  const GET: NextApiHandler<Subscriber[]> = async (_, r) => {
+    const subscribers = await service.listSubscribers();
+    return subscribers.length > 0 ? r.json(subscribers) : r.status(204).end();
+  };
   const POST: NextApiHandler<any> = async (req, res) => {
     let validatedBody: CreateSubscriptionRequest;
     try {

@@ -20,7 +20,11 @@ export function SubscribersServiceImpl(
 
     if (!acknowledged) throw new Error("Falha ao cadastrar o e-mail!");
   };
+
+  const listSubscribers = () => repository.findAll();
+
   return {
     addSubscriber,
+    listSubscribers,
   };
 }

@@ -15,8 +15,14 @@ export function SubscribersRepositoryImpl(): SubscribersRepository {
     return acknowledged;
   };
 
+  const findAll = async () => {
+    const collection = await getCollection;
+    return collection.find().toArray();
+  };
+
   return {
     countByEmail,
     insertOne,
+    findAll,
   };
 }
