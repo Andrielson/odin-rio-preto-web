@@ -12,20 +12,34 @@ export function SubscribersRepositoryImpl(
     getDatabaseCollection<SubscribersDocument>("subscribers");
 
   const mapFromDocument = async (
-    document: SubscribersDocument
+    doc: SubscribersDocument
   ): Promise<Subscriber> => {
-    const { createdAt, encryptedEmail, keywords, verified } = document;
-    const email = await crypto.decrypt(encryptedEmail);
-    return { createdAt, email, keywords, verified };
+    const email = await crypto.decrypt(doc.encryptedEmail);
+    const sub: Subscriber = {
+      email,
+      createdAt: doc.createdAt,
+      keywords: doc.keywords,
+      unsubscriptionToken: doc.unsubscriptionToken,
+    };
+    if (!!doc.verificationToken) sub.verificationToken = doc.verificationToken;
+    return sub;
   };
 
   const mapToDocument = async (
-    subscriber: Subscriber
+    sub: Subscriber
   ): Promise<SubscribersDocument> => {
-    const { createdAt, email, keywords, verified } = subscriber;
+    const { email } = sub;
     const encryptedEmail = await crypto.encrypt(email);
     const emailHash = await crypto.digest(email);
-    return { createdAt, emailHash, encryptedEmail, keywords, verified };
+    const doc: SubscribersDocument = {
+      emailHash,
+      encryptedEmail,
+      createdAt: sub.createdAt,
+      keywords: sub.keywords,
+      unsubscriptionToken: sub.unsubscriptionToken,
+    };
+    if (!!sub.verificationToken) doc.verificationToken = sub.verificationToken;
+    return doc;
   };
 
   const countByEmail = async (email: string) => {
@@ -46,9 +60,30 @@ export function SubscribersRepositoryImpl(
     return Promise.all(documents.map(mapFromDocument));
   };
 
+  const findAllVerified = async () => {
+    const collection = await getCollection;
+    const documents = await collection
+      .find({ verificationToken: { $exists: false } })
+      .toArray();
+    return Promise.all(documents.map(mapFromDocument));
+  };
+
+  const findOneAndRemoveVerificationToken = async (
+    verificationToken: string
+  ) => {
+    const collection = await getCollection;
+    const { value } = await collection.findOneAndUpdate(
+      { verificationToken },
+      { $unset: { verificationToken: "" } }
+    );
+    return !!value;
+  };
+
   return {
     countByEmail,
     insertOne,
     findAll,
+    findAllVerified,
+    findOneAndRemoveVerificationToken,
   };
 }

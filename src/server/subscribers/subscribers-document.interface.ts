@@ -6,5 +6,6 @@ export interface SubscribersDocument {
   encryptedEmail: string;
   keywords: string[];
   createdAt: Date;
-  verified: boolean;
+  verificationToken?: string;
+  unsubscriptionToken: string;
 }
