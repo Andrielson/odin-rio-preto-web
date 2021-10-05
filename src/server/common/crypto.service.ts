@@ -7,57 +7,45 @@ if (!process.env.CRYPTO_HEX_KEY)
     "Please define the CRYPTO_HEX_KEY environment variable inside .env.local"
   );
 
-const password = String(process.env.CRYPTO_HEX_KEY);
-const passwordBuffer = Buffer.from(password, "hex");
-const salt = crypto.randomBytes(16).toString("hex");
-const iv = crypto.randomBytes(16).toString("hex");
+const password = Buffer.from(String(process.env.CRYPTO_HEX_KEY), "hex");
+const delimiter = "/";
+const encoding: BufferEncoding = "base64url";
 
-const generateKey = (salt: string) =>
+const generateKey = (salt: Buffer) =>
   new Promise<Buffer>((resolve, reject) =>
-    crypto.scrypt(
-      passwordBuffer,
-      Buffer.from(salt, "hex"),
-      32,
-      (err, derivedKey) => {
-        if (!!err) reject(err);
-        resolve(derivedKey);
-      }
-    )
+    crypto.scrypt(password, salt, 32, (err, derivedKey) => {
+      if (!!err) reject(err);
+      resolve(derivedKey);
+    })
   );
 
-const createCipheriv = async (iv: string, salt: string) => {
+const createCipheriv = async () => {
+  const salt = crypto.randomBytes(24);
+  const iv = crypto.randomBytes(16);
   const key = await generateKey(salt);
-  return crypto.createCipheriv(algorithm, key, Buffer.from(iv, "hex"));
+  const cipher = crypto.createCipheriv(algorithm, key, iv);
+  return { cipher, iv, salt };
 };
 
-const createDecipheriv = async (iv: string, salt: string) => {
+const createDecipheriv = async (iv: Buffer, salt: Buffer) => {
   const key = await generateKey(salt);
-  return crypto.createDecipheriv(algorithm, key, Buffer.from(iv, "hex"));
+  return crypto.createDecipheriv(algorithm, key, iv);
 };
-
-interface CryptoWrapper {
-  iv: string;
-  salt: string;
-  value: string;
-}
 
 export function CryptoServiceImpl(): CryptoService {
   const encrypt = async (message: string) => {
-    const cipher = await createCipheriv(iv, salt);
-    let encryptedBuffer = cipher.update(message);
-    encryptedBuffer = Buffer.concat([encryptedBuffer, cipher.final()]);
-    const value = encryptedBuffer.toString("hex");
-    const resultWrapper: CryptoWrapper = { iv, salt, value };
-    return Buffer.from(JSON.stringify(resultWrapper)).toString("base64");
+    const { cipher, iv, salt } = await createCipheriv();
+    let value = cipher.update(message);
+    value = Buffer.concat([value, cipher.final()]);
+    return [iv, salt, value].map((it) => it.toString(encoding)).join(delimiter);
   };
 
   const decrypt = async (text: string) => {
-    const wrapper: CryptoWrapper = JSON.parse(
-      Buffer.from(text, "base64").toString("utf-8")
-    );
-    const { iv, salt, value } = wrapper;
+    const [iv, salt, value] = text
+      .split(delimiter)
+      .map((it) => Buffer.from(it, encoding));
     const decipher = await createDecipheriv(iv, salt);
-    let decryptedBuffer = decipher.update(Buffer.from(value, "hex"));
+    let decryptedBuffer = decipher.update(value);
     decryptedBuffer = Buffer.concat([decryptedBuffer, decipher.final()]);
     return decryptedBuffer.toString("utf-8");
   };
