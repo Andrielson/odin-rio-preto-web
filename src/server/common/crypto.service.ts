@@ -6,13 +6,13 @@ if (!process.env.CRYPTO_HEX_KEY)
     "Please define the CRYPTO_HEX_KEY environment variable inside .env.local"
   );
 const password = Buffer.from(String(process.env.CRYPTO_HEX_KEY), "hex");
-const algorithm = "aes-256-cbc";
+const algorithm = "aes-128-cbc";
 const delimiter = "/";
 const encoding: BufferEncoding = "base64url";
 
 const generateKey = (salt: Buffer) =>
   new Promise<Buffer>((resolve, reject) =>
-    crypto.scrypt(password, salt, 32, (err, derivedKey) => {
+    crypto.scrypt(password, salt, 16, (err, derivedKey) => {
       if (!!err) reject(err);
       resolve(derivedKey);
     })
