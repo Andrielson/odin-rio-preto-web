@@ -6,12 +6,25 @@ import { SubscribersServiceImpl } from "./subscribers.service";
 import { Subscriber } from "./types/subscriber.interface";
 import { SubscribersService } from "./types/subscribers-service.interface";
 
+type SubscriberDto = Pick<
+  Subscriber,
+  "email" | "keywords" | "unsubscriptionToken"
+>;
+
+const mapToSubscriberDto = ({
+  email,
+  keywords,
+  unsubscriptionToken,
+}: Subscriber): SubscriberDto => ({ email, keywords, unsubscriptionToken });
+
 export function SubscribersController(
   service: SubscribersService = SubscribersServiceImpl()
 ): NextApiHandler {
-  const GET: NextApiHandler<Subscriber[]> = async (_, r) => {
+  const GET: NextApiHandler<SubscriberDto[]> = async (_, r) => {
     const subscribers = await service.listSubscribers();
-    return subscribers.length > 0 ? r.json(subscribers) : r.status(204).end();
+    return subscribers.length > 0
+      ? r.json(subscribers.map(mapToSubscriberDto))
+      : r.status(204).end();
   };
   const POST: NextApiHandler<any> = async (req, res) => {
     let validatedBody: CreateSubscriptionRequest;
