@@ -15,9 +15,14 @@ export function SubscribersTokenController(
       return response.status(400).send(err);
     }
   };
-  const DELETE: NextApiHandler<string> = async (request, response) => {
+  const DELETE: NextApiHandler<any> = async (request, response) => {
     const token = request.query.token as string;
-    return response.send(token);
+    try {
+      await service.unsubscribeByToken(token);
+      return response.status(204).end();
+    } catch (err) {
+      return response.status(400).send(err);
+    }
   };
   return processRestApiHandlers({ DELETE, PATCH });
 }
