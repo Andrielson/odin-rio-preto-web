@@ -1,7 +1,7 @@
 import crypto from "crypto";
-import { SubscribersRepository } from "./subscribers-repository.interface";
-import { SubscribersService } from "./subscribers-service.interface";
 import { SubscribersRepositoryImpl } from "./subscribers.repository";
+import { SubscribersRepository } from "./types/subscribers-repository.interface";
+import { SubscribersService } from "./types/subscribers-service.interface";
 
 export function SubscribersServiceImpl(
   repository: SubscribersRepository = SubscribersRepositoryImpl()

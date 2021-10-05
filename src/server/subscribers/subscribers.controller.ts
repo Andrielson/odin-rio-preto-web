@@ -2,9 +2,9 @@ import { NextApiHandler } from "next";
 import { processRestApiHandlers } from "../common/process-api-handlers";
 import { CreateSubscriptionRequest } from "./dto/create-subscriber-request";
 import { createSubscriberRequestValidator } from "./dto/create-subscriber-request-validator";
-import { Subscriber } from "./subscriber.interface";
-import { SubscribersService } from "./subscribers-service.interface";
 import { SubscribersServiceImpl } from "./subscribers.service";
+import { Subscriber } from "./types/subscriber.interface";
+import { SubscribersService } from "./types/subscribers-service.interface";
 
 export function SubscribersController(
   service: SubscribersService = SubscribersServiceImpl()

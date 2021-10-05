@@ -1,8 +1,7 @@
 import { NextApiHandler } from "next";
 import { processRestApiHandlers } from "../common/process-api-handlers";
-import { Subscriber } from "./subscriber.interface";
-import { SubscribersService } from "./subscribers-service.interface";
 import { SubscribersServiceImpl } from "./subscribers.service";
+import { SubscribersService } from "./types/subscribers-service.interface";
 
 export function SubscribersTokenController(
   service: SubscribersService = SubscribersServiceImpl()
