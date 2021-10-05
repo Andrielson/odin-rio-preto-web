@@ -30,9 +30,15 @@ export function SubscribersServiceImpl(
     if (!result) throw new Error("Token inválido!");
   };
 
+  const unsubscribeByToken = async (token: string) => {
+    const result = await repository.findOneAndDeleteByToken(token);
+    if (!result) throw new Error("Token inválido!");
+  };
+
   return {
     addSubscriber,
     listSubscribers,
     verifyByToken,
+    unsubscribeByToken,
   };
 }
