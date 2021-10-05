@@ -2,6 +2,11 @@ import * as crypto from "node:crypto";
 import { CryptoService } from "./crypto-service.interface";
 
 const algorithm = "aes-256-cbc";
+if (!process.env.CRYPTO_HEX_KEY)
+  throw new Error(
+    "Please define the CRYPTO_HEX_KEY environment variable inside .env.local"
+  );
+
 const password = String(process.env.CRYPTO_HEX_KEY);
 const passwordBuffer = Buffer.from(password, "hex");
 const salt = crypto.randomBytes(16).toString("hex");

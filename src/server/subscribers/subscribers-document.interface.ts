@@ -1,7 +1,7 @@
 import { ObjectId } from "bson";
 
 export interface SubscribersDocument {
-  id?: ObjectId;
+  _id?: ObjectId;
   emailHash: string;
   encryptedEmail: string;
   keywords: string[];
