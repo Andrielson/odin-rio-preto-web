@@ -23,7 +23,7 @@ export function SubscribersServiceImpl(
     if (!acknowledged) throw new Error("Falha ao cadastrar o e-mail!");
   };
 
-  const listSubscribers = () => repository.findAllVerified();
+  const listSubscribers = () => repository.findAll();
 
   const verifyByToken = async (token: string) => {
     const result = await repository.findOneAndRemoveVerificationToken(token);
