@@ -6,4 +6,5 @@ export interface SubscribersRepository {
   findAll(): Promise<Subscriber[]>;
   findAllVerified(): Promise<Subscriber[]>;
   findOneAndRemoveVerificationToken(token: string): Promise<boolean>;
+  findOneAndDeleteByToken(token: string): Promise<boolean>;
 }

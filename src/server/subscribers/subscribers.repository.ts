@@ -79,11 +79,20 @@ export function SubscribersRepositoryImpl(
     return !!value;
   };
 
+  const findOneAndDeleteByToken = async (unsubscriptionToken: string) => {
+    const collection = await getCollection;
+    const { value } = await collection.findOneAndDelete({
+      unsubscriptionToken,
+    });
+    return !!value;
+  };
+
   return {
     countByEmail,
     insertOne,
     findAll,
     findAllVerified,
     findOneAndRemoveVerificationToken,
+    findOneAndDeleteByToken,
   };
 }
