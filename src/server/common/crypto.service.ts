@@ -1,4 +1,4 @@
-import crypto from "node:crypto";
+import crypto from "crypto";
 import { CryptoService } from "./crypto-service.interface";
 
 const algorithm = "aes-256-cbc";
