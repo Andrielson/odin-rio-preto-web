@@ -6,7 +6,10 @@ export function createSubscriberRequestValidator(
 ): CreateSubscriptionRequest {
   const schema = Joi.object<CreateSubscriptionRequest>({
     email: Joi.string().email().required(),
-    keywords: Joi.array().items(Joi.string()).required(),
+    keywords: Joi.array()
+      .items(Joi.string())
+      .unique((a: string, b: string) => a.toLowerCase() === b.toLowerCase())
+      .required(),
   });
   const validation = schema.validate(requestBody);
   if (!!validation.error) {

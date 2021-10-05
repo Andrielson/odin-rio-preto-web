@@ -1,13 +1,12 @@
 import crypto from "crypto";
 import { CryptoService } from "./crypto-service.interface";
 
-const algorithm = "aes-256-cbc";
 if (!process.env.CRYPTO_HEX_KEY)
   throw new Error(
     "Please define the CRYPTO_HEX_KEY environment variable inside .env.local"
   );
-
 const password = Buffer.from(String(process.env.CRYPTO_HEX_KEY), "hex");
+const algorithm = "aes-256-cbc";
 const delimiter = "/";
 const encoding: BufferEncoding = "base64url";
 
