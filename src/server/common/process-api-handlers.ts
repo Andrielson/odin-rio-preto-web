@@ -1,7 +1,9 @@
 import { NextApiHandler } from "next";
 import { RestApiHandlers } from "../types/rest-api-handlers.type";
 
-export function processRestApiHandlers(handlers: RestApiHandlers): NextApiHandler {
+export function processRestApiHandlers(
+  handlers: RestApiHandlers
+): NextApiHandler {
   const allowedMethods = Object.keys(handlers);
   const default405 = { Allow: allowedMethods.sort().join() };
 
