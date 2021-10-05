@@ -57,8 +57,11 @@ export function CryptoServiceImpl(): CryptoService {
     return decryptedBuffer.toString("utf-8");
   };
 
-  const digest = (text: string) =>
-    Promise.resolve(Buffer.from(text).toString("base64"));
+  const digest = (text: string) => {
+    const hash = crypto.createHash("sha256");
+    hash.update(text);
+    return Promise.resolve(hash.digest("hex"));
+  };
 
   return { encrypt, decrypt, digest };
 }
