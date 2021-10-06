@@ -14,6 +14,10 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async (
   context
 ) => {
   const notFound = true;
+
+  const { method } = context.req;
+  if (!method || method.toUpperCase() !== "GET") return { notFound };
+
   const token = context.params?.token;
   if (!token) return { notFound };
 
