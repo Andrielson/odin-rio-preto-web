@@ -1,6 +1,6 @@
-import { CryptoService } from "../common/crypto-service.interface";
-import { CryptoServiceImpl } from "../common/crypto.service";
-import { getDatabaseCollection } from "../db/mongo";
+import { CryptoService } from "@server/common/crypto-service.interface";
+import { CryptoServiceImpl } from "@server/common/crypto.service";
+import { getDatabaseCollection } from "@server/db/mongo";
 import { Subscriber } from "./types/subscriber.interface";
 import { SubscribersDocument } from "./types/subscribers-document.interface";
 import { SubscribersRepository } from "./types/subscribers-repository.interface";

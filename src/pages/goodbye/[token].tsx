@@ -1,7 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import Image from "next/image";
 import Head from "next/head";
-import { SubscribersServiceImpl } from "../../server/subscribers/subscribers.service";
+import { SubscribersServiceImpl } from "@server/subscribers/subscribers.service";
 import styles from "../../styles/Home.module.css";
 
 type Params = {
