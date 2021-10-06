@@ -1,10 +1,10 @@
 import { NextApiHandler } from "next";
-import { processRestApiHandlers } from "../common/process-api-handlers";
-import { CreateSubscriptionRequest } from "./dto/create-subscriber-request";
-import { createSubscriberRequestValidator } from "./dto/create-subscriber-request-validator";
-import { SubscribersServiceImpl } from "./subscribers.service";
-import { Subscriber } from "./types/subscriber.interface";
-import { SubscribersService } from "./types/subscribers-service.interface";
+import { processRestApiHandlers } from "../../server/common/process-api-handlers";
+import { CreateSubscriptionRequest } from "../../server/subscribers/dto/create-subscriber-request";
+import { createSubscriberRequestValidator } from "../../server/subscribers/dto/create-subscriber-request-validator";
+import { SubscribersServiceImpl } from "../../server/subscribers/subscribers.service";
+import { Subscriber } from "../../server/subscribers/types/subscriber.interface";
+import { SubscribersService } from "../../server/subscribers/types/subscribers-service.interface";
 
 type SubscriberDto = Pick<
   Subscriber,
@@ -47,3 +47,5 @@ export function SubscribersController(
 
   return processRestApiHandlers({ GET, POST });
 }
+
+export default SubscribersController();
