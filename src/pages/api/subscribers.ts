@@ -37,7 +37,7 @@ export function SubscribersController(
     const { email, keywords } = validatedBody;
 
     try {
-      service.addSubscriber(email, keywords);
+      await service.addSubscriber(email, keywords);
     } catch (error) {
       return res.status(500).json({ error });
     }
