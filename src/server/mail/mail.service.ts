@@ -12,12 +12,11 @@ export function MailServiceImpl(
       address: "boletim@riopreto.diario.tk",
       name: "Boletim Diário Oficial",
     };
-    console.log({ from });
     try {
       await transporter.sendMail({ ...message, from });
       console.info("Email enviado!");
     } catch (error) {
-      console.error("Deu ruim no envio do email!");
+      console.error("Falha no envio do email!");
       console.error(error);
     }
   };
