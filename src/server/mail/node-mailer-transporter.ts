@@ -35,6 +35,8 @@ options.pool =
   !!process.env.NODEMAILER_SMTP_POOL &&
   process.env.NODEMAILER_SMTP_POOL === "true";
 
+console.log({ options });
+
 export default createTransport(options as any);
 
 interface NodeMailerOptions {
