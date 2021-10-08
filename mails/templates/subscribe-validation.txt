@@ -1,0 +1,9 @@
+Olá,
+
+Muito obrigado por se cadastrar no Boletim do Diário Oficial de São José do Rio Preto-SP!
+
+Para completar seu cadastro, clique no link para confirmar seu e-mail: %VALIDATION_LINK%
+
+Atenciosamente,
+
+Oleg
