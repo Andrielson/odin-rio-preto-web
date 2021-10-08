@@ -1,0 +1,27 @@
+Olá,
+
+Parabéns por se inscrever no boletim do diário oficial de São José do Rio Preto-SP.
+
+A partir de agora, você receberá, de segunda a sexta-feira, um email contendo as publicações referentes às palavras-chave abaixo:
+
+%KEYWORDS%
+
+É só confirmar a sua inscrição clicando no link abaixo.
+
+===> %VALIDATION_LINK% <===
+
+Caso este email seja um engano e você não tenha se cadastrado ou queira cancelar a sua inscrição, utilize o link no rodapé desta mensagem.
+
+Atenciosamente,
+
+© 2021 - Andrielson Silva
+
+https://github.com/andrielson/odin-rio-preto-web
+
+
+Para cancelar sua inscrição, clique neste link: %UNSUBSCRIBE_LINK%
+
+
+Este boletim não possui nenhuma relação com o município de São José do Rio Preto-SP, sua prefeitura, suas autarquias e demais entidades municipais.
+É oferecido gratuitamente e sem nenhuma garantia por um engenheiro de software independente e sem nenhum vínculo político ou partidário, com a única intenção de ajudar a população e demais interessados.
+Para maiores informações, consulte os termos de uso no link https://riopreto.diario.tk/terms-of-use

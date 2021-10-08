@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1
 FROM node:lts-alpine3.14
 
 COPY docker-entrypoint.sh /usr/local/bin

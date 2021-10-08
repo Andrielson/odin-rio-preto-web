@@ -1,48 +1,60 @@
 import { MailMessage } from "@server/mail/types/mail-message.interface";
+import { getMailTemplate } from "../utils/get-mail-template";
+import APP_URL from "@server/utils/app-url";
+
+const MAIL_ASSETS_URL = process.env.MAIL_ASSETS_URL ?? `${APP_URL}/assets`;
 
 function getContentFromFile(
   template: string,
+  keywordsList: string[],
   validationLink: string,
   unsubscribeLink: string
 ) {
-  const templateWithValidationLink = template.replace(
+  const templateWithKeywords = template.replace(
+    /%KEYWORDS%/g,
+    keywordsList.join("\n")
+  );
+
+  const templateWithValidationLink = templateWithKeywords.replace(
     /%VALIDATION_LINK%/g,
     validationLink
   );
-  return templateWithValidationLink.replace(
+
+  const templateWithUnsubscribeLink = templateWithValidationLink.replace(
     /%UNSUBSCRIBE_LINK%/g,
     unsubscribeLink
   );
+
+  const templateWithAssetsUrl = templateWithUnsubscribeLink.replace(
+    /%MAIL_ASSETS_URL%/g,
+    MAIL_ASSETS_URL
+  );
+
+  return templateWithAssetsUrl.replace(/%APP_URL%/g, APP_URL);
 }
 
-const htmlfile = `
-<html>
-<head>
-<title>Confirme sua inscrição</title>
-</head>
-<body>
-<h1>Boletim do Diário Oficial - São José do Rio Preto/SP</h1>
-<ul>
-<li><a href="%VALIDATION_LINK%">Welcome!</a></li>
-<li><a href="%UNSUBSCRIBE_LINK%">Goodbye!</a></li>
-</ul>
-</body>
-</html>
-`;
-const textfile = `
-Boletim do Diário Oficial - São José do Rio Preto/SP
-
-Welcome: %VALIDATION_LINK%
-Goodbye: %UNSUBSCRIBE_LINK%
-`;
 const subject = "Confirme sua inscrição";
 
-export function SubscribeValidationMail(
+export async function SubscribeValidationMail(
   to: string,
+  keywords: string[],
   validationLink: string,
   unsubscribeLink: string
-): MailMessage {
-  const html = getContentFromFile(htmlfile, validationLink, unsubscribeLink);
-  const text = getContentFromFile(textfile, validationLink, unsubscribeLink);
+): Promise<MailMessage> {
+  const htmlfile = await getMailTemplate("subscribe-validation.xhtml");
+  const textfile = await getMailTemplate("subscribe-validation.txt");
+
+  const html = getContentFromFile(
+    htmlfile,
+    keywords.map((k) => `<li>${k === "*" ? "Todas as publicações" : k}</li>`),
+    validationLink,
+    unsubscribeLink
+  );
+  const text = getContentFromFile(
+    textfile,
+    keywords.map((k) => `• ${k === "*" ? "Todas as publicações" : k}`),
+    validationLink,
+    unsubscribeLink
+  );
   return { html, subject, text, to };
 }
