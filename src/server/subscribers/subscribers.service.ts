@@ -16,7 +16,7 @@ export function SubscribersServiceImpl(
     validationLink: string,
     unsubscribeLink: string
   ) => {
-    const message = SubscribeValidationMail(
+    const message = await SubscribeValidationMail(
       email,
       validationLink,
       unsubscribeLink
