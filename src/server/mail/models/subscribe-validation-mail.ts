@@ -24,8 +24,12 @@ export async function SubscribeValidationMail(
   unsubscribeLink: string
 ): Promise<MailMessage> {
   const htmlfile = await getMailTemplate("subscribe-validation.xhtml");
+  console.log({ htmlfile });
   const textfile = await getMailTemplate("subscribe-validation.txt");
+  console.log({ textfile });
   const html = getContentFromFile(htmlfile, validationLink, unsubscribeLink);
+  console.log({ html });
   const text = getContentFromFile(textfile, validationLink, unsubscribeLink);
+  console.log({ text });
   return { html, subject, text, to };
 }
