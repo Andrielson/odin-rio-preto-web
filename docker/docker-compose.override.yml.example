@@ -6,6 +6,15 @@ networks:
     name: andrielson
 
 services:
+  mail:
+    ports:
+      - "8000:80"
+    volumes:
+      - type: bind
+        source: ../mails
+        target: /usr/share/nginx/html/mails
+        read_only: true
+
   web:
     command: ["tail", "-f", "/etc/os-release"]
     container_name: odin_rio_preto_web
