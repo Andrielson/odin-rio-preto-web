@@ -13,11 +13,13 @@ export function SubscribersServiceImpl(
 ): SubscribersService {
   const sendValidationMail = async (
     email: string,
+    keywords: string[],
     validationLink: string,
     unsubscribeLink: string
   ) => {
     const message = await SubscribeValidationMail(
       email,
+      keywords,
       validationLink,
       unsubscribeLink
     );
@@ -47,7 +49,7 @@ export function SubscribersServiceImpl(
     if (!acknowledged) throw new Error("Falha ao cadastrar o e-mail!");
     const validationLink = `${APP_URL}/welcome/${verificationToken}`;
     const unsubscribeLink = `${APP_URL}/goodbye/${unsubscriptionToken}`;
-    await sendValidationMail(email, validationLink, unsubscribeLink);
+    await sendValidationMail(email, keywords, validationLink, unsubscribeLink);
   };
 
   const listSubscribers = () => repository.findAllVerified();
