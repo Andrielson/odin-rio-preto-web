@@ -10,7 +10,7 @@ const MAIL_TEMPLATES_URL = process.env.MAIL_TEMPLATES_URL;
 
 const httpClient = MAIL_TEMPLATES_URL.startsWith("https://") ? https : http;
 
-export const getMailTemplate = (filename: string) =>
+export const getMailTemplateOff = (filename: string) =>
   new Promise<string>((resolve, reject) => {
     const url = `${MAIL_TEMPLATES_URL}/${filename}`;
     const req = httpClient.get(url, (res) => {
@@ -20,3 +20,9 @@ export const getMailTemplate = (filename: string) =>
     });
     req.on("error", (error) => reject(error));
   });
+
+export async function getMailTemplate(filename: string) {
+  const response = await fetch(`${MAIL_TEMPLATES_URL}/${filename}`);
+  const template = await response.text();
+  return template;
+}
