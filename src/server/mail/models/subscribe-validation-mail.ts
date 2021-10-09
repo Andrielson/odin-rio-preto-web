@@ -41,20 +41,20 @@ export async function SubscribeValidationMail(
   validationLink: string,
   unsubscribeLink: string
 ): Promise<MailMessage> {
-  const htmlfile = await getMailTemplate("subscribe-validation.xhtml");
+  // const htmlfile = await getMailTemplate("subscribe-validation.xhtml");
   const textfile = await getMailTemplate("subscribe-validation.txt");
 
-  const html = getContentFromFile(
-    htmlfile,
-    keywords.map((k) => `<li>${k === "*" ? "Todas as publicações" : k}</li>`),
-    validationLink,
-    unsubscribeLink
-  );
+  // const html = getContentFromFile(
+  //   htmlfile,
+  //   keywords.map((k) => `<li>${k === "*" ? "Todas as publicações" : k}</li>`),
+  //   validationLink,
+  //   unsubscribeLink
+  // );
   const text = getContentFromFile(
     textfile,
     keywords.map((k) => `• ${k === "*" ? "Todas as publicações" : k}`),
     validationLink,
     unsubscribeLink
   );
-  return { html, subject, text, to };
+  return { subject, text, to };
 }
