@@ -32,7 +32,7 @@ export function MailServiceImpl(
 ): MailService {
   const sendMessage = async (message: MailMessage) => {
     try {
-      await transporter.sendMail({ ...message, from });
+      await transporter.sendMail({ ...message, from, headers });
       console.info("Email enviado!");
     } catch (error) {
       console.error("Falha no envio do email!");
