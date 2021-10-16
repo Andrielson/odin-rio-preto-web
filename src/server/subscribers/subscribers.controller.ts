@@ -5,17 +5,17 @@ import { createSubscriberRequestValidator } from "@server/subscribers/dto/create
 import { SubscribersServiceImpl } from "@server/subscribers/subscribers.service";
 import { Subscriber } from "@server/subscribers/types/subscriber.interface";
 import { SubscribersService } from "@server/subscribers/types/subscribers-service.interface";
+import APP_URL from "@server/utils/app-url";
 
-type SubscriberDto = Pick<
-  Subscriber,
-  "email" | "keywords" | "unsubscriptionToken"
->;
+interface SubscriberDto extends Pick<Subscriber, "email" | "keywords"> {
+  unsubscribeLink: string;
+}
 
 const mapToSubscriberDto = ({
   email,
   keywords,
   unsubscriptionToken,
-}: Subscriber): SubscriberDto => ({ email, keywords, unsubscriptionToken });
+}: Subscriber): SubscriberDto => ({ email, keywords, unsubscribeLink: `${APP_URL}/goodbye/${unsubscriptionToken}` });
 
 export function SubscribersController(
   service: SubscribersService = SubscribersServiceImpl()
