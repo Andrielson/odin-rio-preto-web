@@ -10,17 +10,18 @@
   },
   "dependencies": {
     "joi": "^17.4.2",
-    "mongodb": "^4.1.2",
-    "next": "11.1.2",
-    "nodemailer": "^6.6.5",
+    "mongodb": "^4.1.4",
+    "next": "12.0.3",
+    "nodemailer": "^6.7.0",
     "react": "17.0.2",
     "react-dom": "17.0.2"
   },
   "devDependencies": {
+    "@types/node": "16.11.6",
     "@types/nodemailer": "^6.4.4",
-    "@types/react": "17.0.27",
-    "eslint": "7.32.0",
-    "eslint-config-next": "11.1.2",
-    "typescript": "4.4.3"
+    "@types/react": "17.0.34",
+    "eslint": "7",
+    "eslint-config-next": "12.0.3",
+    "typescript": "4.4.4"
   }
 }
