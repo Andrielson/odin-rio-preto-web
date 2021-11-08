@@ -5,6 +5,8 @@ import { createSubscriberRequestValidator } from "@server/subscribers/dto/create
 import { SubscribersServiceImpl } from "@server/subscribers/subscribers.service";
 import { Subscriber } from "@server/subscribers/types/subscriber.interface";
 import { SubscribersService } from "@server/subscribers/types/subscribers-service.interface";
+import { Guard } from "@server/types/guard";
+import { SubscribersGuard } from "./subscribers.guard";
 import APP_URL from "@server/utils/app-url";
 
 interface SubscriberDto extends Pick<Subscriber, "email" | "keywords"> {
@@ -15,16 +17,24 @@ const mapToSubscriberDto = ({
   email,
   keywords,
   unsubscriptionToken,
-}: Subscriber): SubscriberDto => ({ email, keywords, unsubscribeLink: `${APP_URL}/goodbye/${unsubscriptionToken}` });
+}: Subscriber): SubscriberDto => ({
+  email,
+  keywords,
+  unsubscribeLink: `${APP_URL}/goodbye/${unsubscriptionToken}`,
+});
 
 export function SubscribersController(
+  subscribersGuard: Guard = SubscribersGuard(),
   service: SubscribersService = SubscribersServiceImpl()
 ): NextApiHandler {
-  const GET: NextApiHandler<SubscriberDto[]> = async (_, r) => {
+  const GET: NextApiHandler<SubscriberDto[]> = async (req, res) => {
+    if (!(await subscribersGuard.canActivate(req))) {
+      res.status(401).end();
+    }
     const subscribers = await service.listSubscribers();
     return subscribers.length > 0
-      ? r.json(subscribers.map(mapToSubscriberDto))
-      : r.status(204).end();
+      ? res.json(subscribers.map(mapToSubscriberDto))
+      : res.status(204).end();
   };
   const POST: NextApiHandler<any> = async (req, res) => {
     let validatedBody: CreateSubscriptionRequest;
