@@ -28,8 +28,9 @@ export function SubscribersController(
   service: SubscribersService = SubscribersServiceImpl()
 ): NextApiHandler {
   const GET: NextApiHandler<SubscriberDto[]> = async (req, res) => {
-    if (!(await subscribersGuard.canActivate(req))) {
-      res.status(401).end();
+    const canActivate = await subscribersGuard.canActivate(req);
+    if (!canActivate) {
+      return res.status(401).end();
     }
     const subscribers = await service.listSubscribers();
     return subscribers.length > 0

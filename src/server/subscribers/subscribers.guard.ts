@@ -15,17 +15,14 @@ const secretKey = process.env.OAUTH_SECRET_KEY!;
 const audience = process.env.OAUTH_AUDIENCE;
 const issuer = process.env.OAUTH_ISSUER;
 
-const verifyToken = (token: string) =>
-  jwt.verify(token, secretKey, { audience, issuer });
-
 export function SubscribersGuard(): Guard {
   const canActivate = (req: NextApiRequest) => {
     const authorizationHeader = req.headers.authorization ?? "Bearer token";
     const token = authorizationHeader.split(" ")[1];
     try {
-      verifyToken(token);
+      jwt.verify(token, secretKey, { audience, issuer });
     } catch (error) {
-      return Promise.reject(false);
+      return Promise.resolve(false);
     }
     return Promise.resolve(true);
   };
