@@ -5,7 +5,7 @@ export function processRestApiHandlers(
   handlers: RestApiHandlers
 ): NextApiHandler {
   const allowedMethods = Object.keys(handlers);
-  const default405 = { Allow: allowedMethods.sort().join() };
+  const default405 = { Allow: allowedMethods.sort().join(", ") };
 
   return (request, response) => {
     const requestMethod = String(request.method).toUpperCase();

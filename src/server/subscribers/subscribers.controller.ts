@@ -3,7 +3,7 @@ import { processRestApiHandlers } from "@server/common/process-api-handlers";
 import { createSubscriberRequestValidator } from "@server/subscribers/dto/create-subscriber-request-validator";
 import { SubscribersServiceImpl } from "@server/subscribers/subscribers.service";
 import { SubscribersGuard } from "./subscribers.guard";
-import { Guard } from "src/types/guard";
+import { Guard } from "@server/types/guard";
 import APP_URL from "@server/utils/app-url";
 
 const mapToSubscriberDto = ({
@@ -17,7 +17,7 @@ const mapToSubscriberDto = ({
 });
 
 export function SubscribersController(
-  subscribersGuard: Guard = SubscribersGuard(),
+  subscribersGuard: Guard = new SubscribersGuard(),
   service: SubscribersService = SubscribersServiceImpl()
 ): NextApiHandler {
   const GET: NextApiHandler<SubscriberDto[]> = async (req, res) => {

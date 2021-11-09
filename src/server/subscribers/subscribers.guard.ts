@@ -1,32 +1,27 @@
 import { NextApiRequest } from "next";
-import * as jwt from "jsonwebtoken";
-import { Guard } from "src/types/guard";
+import jwt from "jsonwebtoken";
+import { OAuthConfigFromEnv } from "@server/config/oauth.config";
+import { Guard } from "@server/types/guard";
 
-const missing = ["OAUTH_AUDIENCE", "OAUTH_ISSUER", "OAUTH_SECRET_KEY"]
-  .filter((it) => !process.env[it])
-  .join(", ");
-if (!!missing) {
-  throw new Error(
-    `Please define the ${missing} environment variable(s) inside .env.local`
-  );
-}
+export class SubscribersGuard implements Guard {
+  constructor(
+    private readonly config: OAuthConfig = new OAuthConfigFromEnv()
+  ) {}
 
-const secretKey = process.env.OAUTH_SECRET_KEY!;
-const audience = process.env.OAUTH_AUDIENCE;
-const issuer = process.env.OAUTH_ISSUER;
+  async canActivate(request: NextApiRequest) {
+    const { audience, enabled, issuer, secretKey } = this.config;
 
-export function SubscribersGuard(): Guard {
-  const canActivate = (req: NextApiRequest) => {
-    const authorizationHeader = req.headers.authorization ?? "Bearer token";
+    if (!enabled) return true;
+
+    const authorizationHeader = request.headers.authorization ?? "Bearer token";
     const token = authorizationHeader.split(" ")[1];
+
     try {
       jwt.verify(token, secretKey, { audience, issuer });
     } catch (error) {
-      return Promise.resolve(false);
+      return false;
     }
-    return Promise.resolve(true);
-  };
-  return {
-    canActivate,
-  };
+
+    return true;
+  }
 }
