@@ -1,6 +1,6 @@
 import { NextApiRequest } from "next";
 import * as jwt from "jsonwebtoken";
-import { Guard } from "@server/types/guard";
+import { Guard } from "src/types/guard";
 
 const missing = ["OAUTH_AUDIENCE", "OAUTH_ISSUER", "OAUTH_SECRET_KEY"]
   .filter((it) => !process.env[it])

@@ -1,4 +1,3 @@
-import { MailMessage } from "@server/mail/types/mail-message.interface";
 import { getMailTemplate } from "../utils/get-mail-template";
 import APP_URL from "@server/utils/app-url";
 

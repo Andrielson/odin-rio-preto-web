@@ -1,9 +1,6 @@
-import { CryptoService } from "@server/common/crypto-service.interface";
 import { CryptoServiceImpl } from "@server/common/crypto.service";
 import { getDatabaseCollection } from "@server/db/mongo";
-import { Subscriber } from "./types/subscriber.interface";
-import { SubscribersDocument } from "./types/subscribers-document.interface";
-import { SubscribersRepository } from "./types/subscribers-repository.interface";
+import { SubscribersDocument } from "src/types/subscribers-document";
 
 export function SubscribersRepositoryImpl(
   crypto: CryptoService = CryptoServiceImpl()

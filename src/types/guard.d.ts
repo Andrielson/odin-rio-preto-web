@@ -1,5 +1,5 @@
 import { NextApiRequest } from "next";
 
-export interface Guard {
+declare interface Guard {
   canActivate(request: NextApiRequest): Promise<boolean>;
 }

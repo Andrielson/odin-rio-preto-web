@@ -1,8 +1,6 @@
 import { Transporter } from "nodemailer";
 import Mail from "nodemailer/lib/mailer";
 import nodeMailerTransporter from "./node-mailer-transporter";
-import { MailMessage } from "./types/mail-message.interface";
-import { MailService } from "./types/mail-service.interface";
 
 const missingRequiredVars = [
   "MAIL_FROM_ADDRESS",

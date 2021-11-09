@@ -1,10 +1,7 @@
 import crypto from "crypto";
-import { MailService } from "@server/mail/types/mail-service.interface";
 import { MailServiceImpl } from "@server/mail/mail.service";
 import { SubscribeValidationMail } from "@server/mail/models/subscribe-validation-mail";
 import { SubscribersRepositoryImpl } from "./subscribers.repository";
-import { SubscribersRepository } from "./types/subscribers-repository.interface";
-import { SubscribersService } from "./types/subscribers-service.interface";
 import APP_URL from "@server/utils/app-url";
 
 export function SubscribersServiceImpl(

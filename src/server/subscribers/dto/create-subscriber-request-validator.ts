@@ -1,5 +1,4 @@
 import Joi from "joi";
-import { CreateSubscriptionRequest } from "./create-subscriber-request";
 
 export function createSubscriberRequestValidator(
   requestBody: any

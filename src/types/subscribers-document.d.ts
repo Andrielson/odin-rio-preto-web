@@ -1,6 +1,6 @@
 import { ObjectId } from "bson";
 
-export interface SubscribersDocument {
+declare interface SubscribersDocument {
   _id?: ObjectId;
   emailHash: string;
   encryptedEmail: string;

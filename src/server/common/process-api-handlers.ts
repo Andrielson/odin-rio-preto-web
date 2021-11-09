@@ -1,5 +1,5 @@
 import { NextApiHandler } from "next";
-import { RestApiHandlers } from "@server/types/rest-api-handlers.type";
+import { RestApiHandlers } from "src/types/rest-api-handlers";
 
 export function processRestApiHandlers(
   handlers: RestApiHandlers

@@ -1,5 +1,4 @@
 import crypto from "crypto";
-import { CryptoService } from "./crypto-service.interface";
 
 if (!process.env.CRYPTO_CIPHER_KEY)
   throw new Error(

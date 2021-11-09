@@ -1,17 +1,10 @@
 import { NextApiHandler } from "next";
 import { processRestApiHandlers } from "@server/common/process-api-handlers";
-import { CreateSubscriptionRequest } from "@server/subscribers/dto/create-subscriber-request";
 import { createSubscriberRequestValidator } from "@server/subscribers/dto/create-subscriber-request-validator";
 import { SubscribersServiceImpl } from "@server/subscribers/subscribers.service";
-import { Subscriber } from "@server/subscribers/types/subscriber.interface";
-import { SubscribersService } from "@server/subscribers/types/subscribers-service.interface";
-import { Guard } from "@server/types/guard";
 import { SubscribersGuard } from "./subscribers.guard";
+import { Guard } from "src/types/guard";
 import APP_URL from "@server/utils/app-url";
-
-interface SubscriberDto extends Pick<Subscriber, "email" | "keywords"> {
-  unsubscribeLink: string;
-}
 
 const mapToSubscriberDto = ({
   email,
