@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { CryptoConfigFromEnv } from "./crypto.config";
+import { CryptoConfigFromEnv } from "../config/crypto.config";
 
 export class CryptoServiceImpl implements CryptoService {
   constructor(

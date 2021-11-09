@@ -1,5 +1,5 @@
-import { CryptoServiceImpl } from "@server/common/security/crypto.service";
 import { getDatabaseCollection } from "@server/db/mongo";
+import { CryptoServiceImpl } from "@server/security/crypto.service";
 import { SubscribersDocument } from "@server/types/subscribers-document";
 
 export class SubscribersRepositoryImpl implements SubscribersRepository {
