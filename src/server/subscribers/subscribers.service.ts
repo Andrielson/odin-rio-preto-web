@@ -5,7 +5,7 @@ import { SubscribersRepositoryImpl } from "./subscribers.repository";
 import APP_URL from "@server/utils/app-url";
 
 export function SubscribersServiceImpl(
-  mailService: MailService = MailServiceImpl(),
+  mailService: MailService = new MailServiceImpl(),
   repository: SubscribersRepository = new SubscribersRepositoryImpl()
 ): SubscribersService {
   const sendValidationMail = async (

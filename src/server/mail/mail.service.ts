@@ -1,41 +1,55 @@
-import { Transporter } from "nodemailer";
+import { createTransport, Transporter } from "nodemailer";
 import Mail from "nodemailer/lib/mailer";
-import nodeMailerTransporter from "./node-mailer-transporter";
+import { MailConfigFromEnv } from "@server/config/mail.config";
+import { NodemailerConfigFromEnv } from "@server/config/nodemailer.config";
 
-const missingRequiredVars = [
-  "MAIL_FROM_ADDRESS",
-  "MAIL_FROM_NAME",
-  "MAIL_MAILTO_UNSUBSCRIBE",
-]
-  .filter((it) => !process.env[it])
-  .join(", ");
+export class MailServiceImpl implements MailService {
+  private readonly from: Mail.Address;
+  private readonly headers: Mail.Headers;
+  private readonly transporter: Transporter;
 
-if (missingRequiredVars.length > 0)
-  throw new Error(
-    `Please define the ${missingRequiredVars} environment variable(s) inside .env.local`
-  );
+  constructor(
+    mailConfig: MailConfig = new MailConfigFromEnv(),
+    config = new NodemailerConfigFromEnv()
+  ) {
+    this.transporter = createTransport(config as any);
+    this.from = {
+      address: mailConfig.fromAddress,
+      name: mailConfig.fromName,
+    };
 
-const from: Mail.Address = {
-  address: `${process.env.MAIL_FROM_ADDRESS}`,
-  name: `${process.env.MAIL_FROM_NAME}`,
-};
+    this.headers = {
+      key: "List-Unsubscribe",
+      value: `mailto:${mailConfig.mailToUnsubscribe}?subject=unsubscribe`,
+    };
+  }
 
-const headers: Mail.Headers = {
-  key: "List-Unsubscribe",
-  value: `mailto:${process.env.MAIL_MAILTO_UNSUBSCRIBE}?subject=unsubscribe`,
-};
-
-export function MailServiceImpl(
-  transporter: Transporter = nodeMailerTransporter
-): MailService {
-  const sendMessage = async (message: MailMessage) => {
+  async sendMessage(message: MailMessage) {
     try {
-      await transporter.sendMail({ ...message, from, headers });
+      await this.transporter.sendMail({
+        ...message,
+        from: this.from,
+        headers: this.headers,
+      });
       console.info("Email enviado!");
     } catch (error) {
       console.error("Falha no envio do email!");
       console.error(error);
     }
-  };
-  return { sendMessage };
+  }
 }
+
+// export function MailServiceImpl2(
+//   transporter: Transporter = nodeMailerTransporter
+// ): MailService {
+//   const sendMessage = async (message: MailMessage) => {
+//     try {
+//       await transporter.sendMail({ ...message, from, headers });
+//       console.info("Email enviado!");
+//     } catch (error) {
+//       console.error("Falha no envio do email!");
+//       console.error(error);
+//     }
+//   };
+//   return { sendMessage };
+// }
