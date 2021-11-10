@@ -1,11 +1,12 @@
 import crypto from "crypto";
 import { MailServiceImpl } from "@server/mail/mail.service";
-import { SubscribeValidationMail } from "@server/mail/models/subscribe-validation-mail";
+import { SubscribeValidationMailFactory } from "@server/mail/messages/subscribe-validation-mail.factory";
 import { SubscribersRepositoryImpl } from "./subscribers.repository";
 import APP_URL from "@server/utils/app-url";
 
 export function SubscribersServiceImpl(
   mailService: MailService = new MailServiceImpl(),
+  mailFactory = new SubscribeValidationMailFactory(),
   repository: SubscribersRepository = new SubscribersRepositoryImpl()
 ): SubscribersService {
   const sendValidationMail = async (
@@ -14,7 +15,7 @@ export function SubscribersServiceImpl(
     validationLink: string,
     unsubscribeLink: string
   ) => {
-    const message = await SubscribeValidationMail(
+    const message = await mailFactory.getMessage(
       email,
       keywords,
       validationLink,
