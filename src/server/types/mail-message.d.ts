@@ -1,4 +1,4 @@
-export interface MailMessage {
+declare interface MailMessage {
   html: string;
   subject: string;
   text: string;

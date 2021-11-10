@@ -1,4 +1,4 @@
-export interface Subscriber {
+declare interface Subscriber {
   email: string;
   keywords: string[];
   createdAt: Date;

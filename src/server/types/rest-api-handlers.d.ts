@@ -1,5 +1,5 @@
 import { NextApiHandler } from "next";
 
-export interface RestApiHandlers {
+declare type RestApiHandlers = {
   [k: string]: NextApiHandler;
-}
+};

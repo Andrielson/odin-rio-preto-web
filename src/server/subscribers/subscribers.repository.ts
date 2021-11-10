@@ -1,20 +1,18 @@
-import { CryptoService } from "@server/common/crypto-service.interface";
-import { CryptoServiceImpl } from "@server/common/crypto.service";
 import { getDatabaseCollection } from "@server/db/mongo";
-import { Subscriber } from "./types/subscriber.interface";
-import { SubscribersDocument } from "./types/subscribers-document.interface";
-import { SubscribersRepository } from "./types/subscribers-repository.interface";
+import { CryptoServiceImpl } from "@server/security/crypto.service";
+import { SubscribersDocument } from "@server/types/subscribers-document";
 
-export function SubscribersRepositoryImpl(
-  crypto: CryptoService = CryptoServiceImpl()
-): SubscribersRepository {
-  const getCollection =
-    getDatabaseCollection<SubscribersDocument>("subscribers");
+export class SubscribersRepositoryImpl implements SubscribersRepository {
+  private get getCollection() {
+    return getDatabaseCollection<SubscribersDocument>("subscribers");
+  }
 
-  const mapFromDocument = async (
-    doc: SubscribersDocument
-  ): Promise<Subscriber> => {
-    const email = await crypto.decrypt(doc.encryptedEmail);
+  constructor(
+    private readonly crypto: CryptoService = new CryptoServiceImpl()
+  ) {}
+
+  private async mapFromDocument(doc: SubscribersDocument) {
+    const email = await this.crypto.decrypt(doc.encryptedEmail);
     const sub: Subscriber = {
       email,
       createdAt: doc.createdAt,
@@ -23,14 +21,12 @@ export function SubscribersRepositoryImpl(
     };
     if (!!doc.verificationToken) sub.verificationToken = doc.verificationToken;
     return sub;
-  };
+  }
 
-  const mapToDocument = async (
-    sub: Subscriber
-  ): Promise<SubscribersDocument> => {
+  private async mapToDocument(sub: Subscriber) {
     const { email } = sub;
-    const encryptedEmail = await crypto.encrypt(email);
-    const emailHash = await crypto.digest(email);
+    const encryptedEmail = await this.crypto.encrypt(email);
+    const emailHash = await this.crypto.digest(email);
     const doc: SubscribersDocument = {
       emailHash,
       encryptedEmail,
@@ -40,59 +36,53 @@ export function SubscribersRepositoryImpl(
     };
     if (!!sub.verificationToken) doc.verificationToken = sub.verificationToken;
     return doc;
-  };
+  }
 
-  const countByEmail = async (email: string) => {
-    const collection = await getCollection;
-    const emailHash = await crypto.digest(email);
+  async countByEmail(email: string) {
+    const collection = await this.getCollection;
+    const emailHash = await this.crypto.digest(email);
     return collection.countDocuments({ emailHash });
-  };
-  const insertOne = async (subscriber: Subscriber) => {
-    const collection = await getCollection;
-    const document = await mapToDocument(subscriber);
+  }
+
+  async insertOne(subscriber: Subscriber) {
+    const collection = await this.getCollection;
+    const document = await this.mapToDocument(subscriber);
     const { acknowledged } = await collection.insertOne(document);
     return acknowledged;
-  };
+  }
 
-  const findAll = async () => {
-    const collection = await getCollection;
+  async findAll() {
+    const collection = await this.getCollection;
     const documents = await collection.find().toArray();
-    return Promise.all(documents.map(mapFromDocument));
-  };
+    return Promise.all(
+      documents.map(async (it) => await this.mapFromDocument(it))
+    );
+  }
 
-  const findAllVerified = async () => {
-    const collection = await getCollection;
+  async findAllVerified() {
+    const collection = await this.getCollection;
     const documents = await collection
       .find({ verificationToken: { $exists: false } })
       .toArray();
-    return Promise.all(documents.map(mapFromDocument));
-  };
+    return Promise.all(
+      documents.map(async (it) => await this.mapFromDocument(it))
+    );
+  }
 
-  const findOneAndRemoveVerificationToken = async (
-    verificationToken: string
-  ) => {
-    const collection = await getCollection;
+  async findOneAndRemoveVerificationToken(verificationToken: string) {
+    const collection = await this.getCollection;
     const { value } = await collection.findOneAndUpdate(
       { verificationToken },
       { $unset: { verificationToken: "" } }
     );
     return !!value;
-  };
+  }
 
-  const findOneAndDeleteByToken = async (unsubscriptionToken: string) => {
-    const collection = await getCollection;
+  async findOneAndDeleteByToken(unsubscriptionToken: string) {
+    const collection = await this.getCollection;
     const { value } = await collection.findOneAndDelete({
       unsubscriptionToken,
     });
     return !!value;
-  };
-
-  return {
-    countByEmail,
-    insertOne,
-    findAll,
-    findAllVerified,
-    findOneAndRemoveVerificationToken,
-    findOneAndDeleteByToken,
-  };
+  }
 }

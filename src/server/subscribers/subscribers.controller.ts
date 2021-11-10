@@ -1,30 +1,34 @@
 import { NextApiHandler } from "next";
 import { processRestApiHandlers } from "@server/common/process-api-handlers";
-import { CreateSubscriptionRequest } from "@server/subscribers/dto/create-subscriber-request";
 import { createSubscriberRequestValidator } from "@server/subscribers/dto/create-subscriber-request-validator";
 import { SubscribersServiceImpl } from "@server/subscribers/subscribers.service";
-import { Subscriber } from "@server/subscribers/types/subscriber.interface";
-import { SubscribersService } from "@server/subscribers/types/subscribers-service.interface";
+import { SubscribersGuard } from "./subscribers.guard";
+import { Guard } from "@server/types/guard";
 import APP_URL from "@server/utils/app-url";
-
-interface SubscriberDto extends Pick<Subscriber, "email" | "keywords"> {
-  unsubscribeLink: string;
-}
 
 const mapToSubscriberDto = ({
   email,
   keywords,
   unsubscriptionToken,
-}: Subscriber): SubscriberDto => ({ email, keywords, unsubscribeLink: `${APP_URL}/goodbye/${unsubscriptionToken}` });
+}: Subscriber): SubscriberDto => ({
+  email,
+  keywords,
+  unsubscribeLink: `${APP_URL}/goodbye/${unsubscriptionToken}`,
+});
 
 export function SubscribersController(
+  subscribersGuard: Guard = new SubscribersGuard(),
   service: SubscribersService = SubscribersServiceImpl()
 ): NextApiHandler {
-  const GET: NextApiHandler<SubscriberDto[]> = async (_, r) => {
+  const GET: NextApiHandler<SubscriberDto[]> = async (req, res) => {
+    const canActivate = await subscribersGuard.canActivate(req);
+    if (!canActivate) {
+      return res.status(401).end();
+    }
     const subscribers = await service.listSubscribers();
     return subscribers.length > 0
-      ? r.json(subscribers.map(mapToSubscriberDto))
-      : r.status(204).end();
+      ? res.json(subscribers.map(mapToSubscriberDto))
+      : res.status(204).end();
   };
   const POST: NextApiHandler<any> = async (req, res) => {
     let validatedBody: CreateSubscriptionRequest;
