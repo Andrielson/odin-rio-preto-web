@@ -1,8 +1,6 @@
 version: "2.4"
 
 services:
-  mail:
-    image: nginx:alpine
   web:
     build:
       context: ./web
