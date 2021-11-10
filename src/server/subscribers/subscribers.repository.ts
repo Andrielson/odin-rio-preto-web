@@ -1,14 +1,15 @@
-import { getDatabaseCollection } from "@server/db/mongo";
+import { MongodbConnection } from "@server/db/mongo";
 import { CryptoServiceImpl } from "@server/security/crypto.service";
 import { SubscribersDocument } from "@server/types/subscribers-document";
 
 export class SubscribersRepositoryImpl implements SubscribersRepository {
   private get getCollection() {
-    return getDatabaseCollection<SubscribersDocument>("subscribers");
+    return this.db.getCollection<SubscribersDocument>("subscribers");
   }
 
   constructor(
-    private readonly crypto: CryptoService = new CryptoServiceImpl()
+    private readonly crypto: CryptoService = new CryptoServiceImpl(),
+    private readonly db = new MongodbConnection()
   ) {}
 
   private async mapFromDocument(doc: SubscribersDocument) {
