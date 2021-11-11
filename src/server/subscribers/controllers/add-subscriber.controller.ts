@@ -1,18 +1,24 @@
 import { AbstractController } from "@server/controllers/abstract.controller";
-import { createSubscriberRequestValidator } from "@server/subscribers/dto/create-subscriber-request-validator";
 import { AddSubscriberServiceImpl } from "../services/add-subscriber.service";
+import { AddSubscriberValidator } from "../validators/add-subscriber-request-validator";
 
 export class AddSubscriberController extends AbstractController {
-  constructor(service: AddSubscriberService = new AddSubscriberServiceImpl()) {
+  constructor(
+    service: AddSubscriberService = new AddSubscriberServiceImpl(),
+    validator: RequestValidator<CreateSubscriptionRequest> = new AddSubscriberValidator()
+  ) {
     super();
-    this.configurePostHandler(service);
+    this.configurePostHandler(service, validator);
   }
 
-  private configurePostHandler(service: AddSubscriberService) {
+  private configurePostHandler(
+    service: AddSubscriberService,
+    validator: RequestValidator<CreateSubscriptionRequest>
+  ) {
     this.handlers.POST = async (req, res) => {
       let validatedBody: CreateSubscriptionRequest;
       try {
-        validatedBody = createSubscriberRequestValidator(req.body);
+        validatedBody = validator.validate(req.body);
       } catch (error: any) {
         const { message } = error;
         return res.status(422).json({ message });
