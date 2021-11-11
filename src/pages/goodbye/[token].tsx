@@ -1,7 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import Image from "next/image";
 import Head from "next/head";
-import { SubscribersServiceImpl } from "@server/subscribers/subscribers.service";
+import { RemoveSubscriberByTokenServiceImpl } from "@server/subscribers/services/remove-subscriber-by-token.service";
 import styles from "../../styles/Home.module.css";
 
 type Params = {
@@ -21,9 +21,9 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async (
   const token = context.params?.token;
   if (!token) return { notFound };
 
-  const service = SubscribersServiceImpl();
+  const service = new RemoveSubscriberByTokenServiceImpl();
   try {
-    await service.unsubscribeByToken(token);
+    await service.removeByToken(token);
   } catch (err) {
     return { notFound };
   }
