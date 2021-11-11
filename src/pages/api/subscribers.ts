@@ -1,3 +1,3 @@
-import { SubscribersController } from "@server/subscribers/subscribers.controller";
+import { ListSubscribersController } from "@server/subscribers/controllers/list-subscribers.controller";
 
-export default SubscribersController();
+export default new ListSubscribersController().processRestApiHandlers();
