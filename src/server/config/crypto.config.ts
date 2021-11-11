@@ -1,8 +1,11 @@
-export class CryptoConfigFromEnv implements CryptoConfig {
-  private readonly required = [
-    "CRYPTO_CIPHER_KEY",
-    "CRYPTO_CIPHER_KEY_ENCODING",
-  ];
+import { AbstractConfigFromEnv } from "./abstract.config";
+
+const required = ["CRYPTO_CIPHER_KEY", "CRYPTO_CIPHER_KEY_ENCODING"];
+
+export class CryptoConfigFromEnv
+  extends AbstractConfigFromEnv
+  implements CryptoConfig
+{
   readonly cipherKey: Buffer;
   readonly cipherKeyEncoding: BufferEncoding;
   readonly cipherAlgorithm: string;
@@ -11,12 +14,7 @@ export class CryptoConfigFromEnv implements CryptoConfig {
   readonly hashAlgorithm: string;
 
   constructor(env: NodeJS.ProcessEnv = process.env) {
-    const missing = this.required.filter((it) => !env[it]).join(", ");
-    if (!!missing) {
-      throw new Error(
-        `Please define the ${missing} environment variable(s) inside .env.local`
-      );
-    }
+    super(env, required);
     this.cipherKeyEncoding = env.CRYPTO_CIPHER_KEY_ENCODING as BufferEncoding;
     this.cipherKey = Buffer.from(
       String(env.CRYPTO_CIPHER_KEY),
