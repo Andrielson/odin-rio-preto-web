@@ -14,8 +14,7 @@ default:
       - .yarn-cache/
       - node_modules/
   tags:
-    - andrielson
-    - docker
+    - sim7570
 
 install-dependencies:
   stage: .pre
