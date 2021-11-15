@@ -1,6 +1,6 @@
 import { AbstractController } from "@server/controllers/abstract.controller";
 import { Guard } from "@server/types/guard";
-import APP_URL from "@server/utils/app-url";
+import APP_URL from "@server/constants/app-url";
 import { ListSubscribersServiceImpl } from "../services/list-subscribers.service";
 import { SubscribersGuard } from "../subscribers.guard";
 

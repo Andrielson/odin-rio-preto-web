@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import APP_URL from "@server/utils/app-url";
+import APP_URL from "@server/constants/app-url";
 import { MailServiceImpl } from "@server/mail/mail.service";
 import { SubscribeValidationMailFactory } from "@server/mail/messages/subscribe-validation-mail.factory";
 import { SubscribersRepositoryImpl } from "../subscribers.repository";
