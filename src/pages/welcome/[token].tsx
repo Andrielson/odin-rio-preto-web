@@ -1,7 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import Image from "next/image";
 import Head from "next/head";
-import { VerifySubscriberByTokenServiceImpl } from "@server/subscribers/services/verify-subscriber-by-token.service";
+import verifySubscriberByTokenServiceFactory from "@server/subscribers/services/verify-subscriber-by-token.service";
 import styles from "../../styles/Home.module.css";
 
 type Params = {
@@ -21,7 +21,7 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async (
   const token = context.params?.token;
   if (!token) return { notFound };
 
-  const service = new VerifySubscriberByTokenServiceImpl();
+  const service = verifySubscriberByTokenServiceFactory();
   try {
     await service.verifyByToken(token);
   } catch (err) {

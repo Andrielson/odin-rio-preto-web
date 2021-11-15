@@ -1,0 +1,19 @@
+FROM node:lts-alpine3.14
+
+WORKDIR /srv
+
+ENV NODE_ENV production
+
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nextjs -u 1001
+
+COPY ./.next ./.next
+COPY ./node_modules ./node_modules
+COPY ./public ./public 
+COPY ./package.json ./package.json
+
+USER nextjs
+
+EXPOSE 3000
+
+CMD ["yarn", "start"]
