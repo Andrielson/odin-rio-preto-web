@@ -1,37 +1,32 @@
-import { AbstractController } from "@server/controllers/abstract.controller";
+import { NextApiHandler } from "next";
 import { Guard } from "@server/types/guard";
-import APP_URL from "@server/utils/app-url";
-import { ListSubscribersServiceImpl } from "../services/list-subscribers.service";
-import { SubscribersGuard } from "../subscribers.guard";
+import APP_URL from "@server/constants/app-url";
+import processRestApiHandlers from "@server/functions/process-rest-api-handlers";
+import subscribersGuardFactory from "../guards/subscribers.guard";
+import listSubscribersServiceFactory from "../services/list-subscribers.service";
 
-export class ListSubscribersController extends AbstractController {
-  constructor(
-    guard: Guard = new SubscribersGuard(),
-    service: ListSubscribersService = new ListSubscribersServiceImpl()
-  ) {
-    super();
-    this.configureGetHandler(guard, service);
-  }
-
-  private configureGetHandler(guard: Guard, service: ListSubscribersService) {
-    this.handlers.GET = async (req, res) => {
-      const canActivate = await guard.canActivate(req);
-      if (!canActivate) {
-        return res.status(401).end();
-      }
-      const subscribers = await service.listSubscribers();
-      return subscribers.length > 0
-        ? res.json(subscribers.map((it) => this.mapToSubscriberDto(it)))
-        : res.status(204).end();
-    };
-  }
-
-  private mapToSubscriberDto(subscriber: Subscriber) {
+export default function listSubscribersController(
+  guard: Guard = subscribersGuardFactory(),
+  service: ListSubscribersService = listSubscribersServiceFactory()
+): NextApiHandler {
+  const mapToSubscriberDto = (subscriber: Subscriber) => {
     const { email, keywords, unsubscriptionToken } = subscriber;
     return {
       email,
       keywords,
       unsubscribeLink: `${APP_URL}/goodbye/${unsubscriptionToken}`,
     } as SubscriberDto;
-  }
+  };
+  const GET: NextApiHandler<SubscriberDto[]> = async (req, res) => {
+    const canActivate = await guard.canActivate(req);
+    if (!canActivate) {
+      return res.status(401).end();
+    }
+    const subscribers = await service.listSubscribers();
+    return subscribers.length > 0
+      ? res.json(subscribers.map(mapToSubscriberDto))
+      : res.status(204).end();
+  };
+
+  return processRestApiHandlers({ GET });
 }

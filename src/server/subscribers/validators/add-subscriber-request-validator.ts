@@ -1,9 +1,7 @@
 import Joi from "joi";
 
-export class AddSubscriberValidator
-  implements RequestValidator<CreateSubscriptionRequest>
-{
-  validate(requestBody: any): CreateSubscriptionRequest {
+export default function AddSubscriberValidatorFactory(): RequestValidator<CreateSubscriptionRequest> {
+  const validate = (requestBody: any): CreateSubscriptionRequest => {
     const schema = Joi.object<CreateSubscriptionRequest>({
       email: Joi.string().email().required(),
       keywords: Joi.array()
@@ -16,5 +14,6 @@ export class AddSubscriberValidator
       throw validation.error;
     }
     return validation.value;
-  }
+  };
+  return { validate };
 }

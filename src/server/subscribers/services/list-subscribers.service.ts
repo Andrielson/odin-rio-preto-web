@@ -1,11 +1,10 @@
-import { SubscribersRepositoryImpl } from "../subscribers.repository";
+import subscribersRepositoryFactory from "../subscribers.repository";
 
-export class ListSubscribersServiceImpl implements ListSubscribersService {
-  constructor(
-    private readonly repository: SubscribersRepository = new SubscribersRepositoryImpl()
-  ) {}
-
-  listSubscribers() {
-    return this.repository.findAllVerified();
-  }
+export default function listSubscribersServiceFactory(
+  repository: SubscribersRepository = subscribersRepositoryFactory()
+): ListSubscribersService {
+  const listSubscribers = async () => {
+    return await repository.findAllVerified();
+  };
+  return { listSubscribers };
 }
