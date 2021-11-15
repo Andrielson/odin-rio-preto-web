@@ -1,15 +1,13 @@
 import { NextApiRequest } from "next";
 import jwt from "jsonwebtoken";
-import { OAuthConfigFromEnv } from "@server/config/oauth.config";
+import OAuthConfigFromEnvFactory from "@server/config/oauth.config";
 import { Guard } from "@server/types/guard";
 
-export class SubscribersGuard implements Guard {
-  constructor(
-    private readonly config: OAuthConfig = new OAuthConfigFromEnv()
-  ) {}
-
-  async canActivate(request: NextApiRequest) {
-    const { audience, enabled, issuer, secretKey } = this.config;
+export default function SubscribersGuardFactory(
+  config: OAuthConfig = OAuthConfigFromEnvFactory()
+): Guard {
+  const canActivate = async (request: NextApiRequest) => {
+    const { audience, enabled, issuer, secretKey } = config;
 
     if (!enabled) return true;
 
@@ -23,5 +21,6 @@ export class SubscribersGuard implements Guard {
     }
 
     return true;
-  }
+  };
+  return { canActivate };
 }
