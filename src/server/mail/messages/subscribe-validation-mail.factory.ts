@@ -1,5 +1,5 @@
 import mailMessageConfigFromEnvFactory from "@server/config/mail-message.config";
-import getMailTemplate from "../../functions/get-mail-template";
+import getMailTemplate from "@server/functions/get-mail-template";
 
 export default function subscribeValidationMailFactory(
   config: MailFactoryConfig = mailMessageConfigFromEnvFactory()
@@ -62,4 +62,6 @@ export default function subscribeValidationMailFactory(
 
     return { html, subject, text, to };
   };
+
+  return { getMessage };
 }

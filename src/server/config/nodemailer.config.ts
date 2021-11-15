@@ -1,4 +1,4 @@
-import checkRequiredOptionsFromEnv from "../functions/check-required-options-from-env";
+import checkRequiredOptionsFromEnv from "@server/functions/check-required-options-from-env";
 
 export default function nodemailerConfigFromEnvFactory(
   env: NodeJS.ProcessEnv = process.env

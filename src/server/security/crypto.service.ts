@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import cryptoConfigFromEnvFactory from "../config/crypto.config";
+import cryptoConfigFromEnvFactory from "@server/config/crypto.config";
 
 export default function cryptoServiceFactory(
   config: CryptoConfig = cryptoConfigFromEnvFactory()

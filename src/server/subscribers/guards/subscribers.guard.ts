@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import OAuthConfigFromEnvFactory from "@server/config/oauth.config";
 import { Guard } from "@server/types/guard";
 
-export default function SubscribersGuardFactory(
+export default function subscribersGuardFactory(
   config: OAuthConfig = OAuthConfigFromEnvFactory()
 ): Guard {
   const canActivate = async (request: NextApiRequest) => {
