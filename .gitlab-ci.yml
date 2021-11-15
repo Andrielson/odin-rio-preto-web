@@ -14,7 +14,7 @@ default:
       - .yarn-cache/
       - node_modules/
   tags:
-    - sim7570
+    - contabo
 
 install-dependencies:
   stage: .pre
