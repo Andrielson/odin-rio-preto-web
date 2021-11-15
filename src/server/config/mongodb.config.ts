@@ -1,14 +1,12 @@
-import { AbstractConfigFromEnv } from "@server/config/abstract.config";
+import checkRequiredOptionsFromEnv from "@server/config/check-required-options-from-env";
 
-const required = ["MONGODB_URI", "NODE_ENV"];
+export default function mongodbConfigFactory(
+  env: NodeJS.ProcessEnv = process.env
+): MongodbConfig {
+  const required = ["MONGODB_URI", "NODE_ENV"];
+  checkRequiredOptionsFromEnv(env, required);
+  const uri = env.MONGODB_URI!;
+  const nodeEnv = env.NODE_ENV;
 
-export class MongodbConfig extends AbstractConfigFromEnv {
-  readonly uri: string;
-  readonly nodeEnv: "development" | "production" | "test";
-
-  constructor(env: NodeJS.ProcessEnv = process.env) {
-    super(env, required);
-    this.uri = env.MONGODB_URI!;
-    this.nodeEnv = env.NODE_ENV;
-  }
+  return { nodeEnv, uri };
 }

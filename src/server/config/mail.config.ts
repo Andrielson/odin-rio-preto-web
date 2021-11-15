@@ -1,23 +1,21 @@
-import { AbstractConfigFromEnv } from "./abstract.config";
+import checkRequiredOptionsFromEnv from "./check-required-options-from-env";
 
-const required = [
-  "MAIL_FROM_ADDRESS",
-  "MAIL_FROM_NAME",
-  "MAIL_MAILTO_UNSUBSCRIBE",
-];
+export default function mailConfigFromEnvFactory(
+  env: NodeJS.ProcessEnv = process.env
+): MailConfig {
+  const required = [
+    "MAIL_FROM_ADDRESS",
+    "MAIL_FROM_NAME",
+    "MAIL_MAILTO_UNSUBSCRIBE",
+  ];
+  checkRequiredOptionsFromEnv(env, required);
+  const fromAddress = env.MAIL_FROM_ADDRESS!;
+  const fromName = env.MAIL_FROM_NAME!;
+  const mailToUnsubscribe = env.MAIL_MAILTO_UNSUBSCRIBE!;
 
-export class MailConfigFromEnv
-  extends AbstractConfigFromEnv
-  implements MailConfig
-{
-  readonly fromAddress: string;
-  readonly fromName: string;
-  readonly mailToUnsubscribe: string;
-
-  constructor(env: NodeJS.ProcessEnv = process.env) {
-    super(env, required);
-    this.fromAddress = env.MAIL_FROM_ADDRESS!;
-    this.fromName = env.MAIL_FROM_NAME!;
-    this.mailToUnsubscribe = env.MAIL_MAILTO_UNSUBSCRIBE!;
-  }
+  return {
+    fromAddress,
+    fromName,
+    mailToUnsubscribe,
+  };
 }

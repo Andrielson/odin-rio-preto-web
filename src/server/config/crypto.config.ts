@@ -1,29 +1,28 @@
-import { AbstractConfigFromEnv } from "./abstract.config";
+import checkRequiredOptionsFromEnv from "./check-required-options-from-env";
 
-const required = ["CRYPTO_CIPHER_KEY", "CRYPTO_CIPHER_KEY_ENCODING"];
+export default function cryptoConfigFromEnvFactory(
+  env: NodeJS.ProcessEnv = process.env
+): CryptoConfig {
+  const required = ["CRYPTO_CIPHER_KEY", "CRYPTO_CIPHER_KEY_ENCODING"];
+  checkRequiredOptionsFromEnv(env, required);
 
-export class CryptoConfigFromEnv
-  extends AbstractConfigFromEnv
-  implements CryptoConfig
-{
-  readonly cipherKey: Buffer;
-  readonly cipherKeyEncoding: BufferEncoding;
-  readonly cipherAlgorithm: string;
-  readonly cipherDelimiter: string;
-  readonly cipherEncoding: BufferEncoding;
-  readonly hashAlgorithm: string;
+  const cipherKeyEncoding = env.CRYPTO_CIPHER_KEY_ENCODING as BufferEncoding;
+  const cipherKey = Buffer.from(
+    String(env.CRYPTO_CIPHER_KEY),
+    cipherKeyEncoding
+  );
+  const cipherAlgorithm = env.CRYPTO_CIPHER_ALGORITHM ?? "aes-128-cbc";
+  const cipherDelimiter = env.CRYPTO_CIPHER_DELIMITER ?? "|";
+  const cipherEncoding = (env.CRYPTO_CIPHER_ENCODING ??
+    "base64") as BufferEncoding;
+  const hashAlgorithm = env.CRYPTO_HASH_ALGORITHM ?? "sha256";
 
-  constructor(env: NodeJS.ProcessEnv = process.env) {
-    super(env, required);
-    this.cipherKeyEncoding = env.CRYPTO_CIPHER_KEY_ENCODING as BufferEncoding;
-    this.cipherKey = Buffer.from(
-      String(env.CRYPTO_CIPHER_KEY),
-      this.cipherKeyEncoding
-    );
-    this.cipherAlgorithm = env.CRYPTO_CIPHER_ALGORITHM ?? "aes-128-cbc";
-    this.cipherDelimiter = env.CRYPTO_CIPHER_DELIMITER ?? "|";
-    this.cipherEncoding = (env.CRYPTO_CIPHER_ENCODING ??
-      "base64") as BufferEncoding;
-    this.hashAlgorithm = env.CRYPTO_HASH_ALGORITHM ?? "sha256";
-  }
+  return {
+    cipherKey,
+    cipherKeyEncoding,
+    cipherAlgorithm,
+    cipherDelimiter,
+    cipherEncoding,
+    hashAlgorithm,
+  };
 }
