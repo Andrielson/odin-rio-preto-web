@@ -1,22 +1,67 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import flagImage from "../../public/images/flag-rio-preto.png";
+import { useRef, useState } from "react";
+import heroImage from "../../public/images/cidade.jpg";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import { Chips } from "primereact/chips";
 import { InputText } from "primereact/inputtext";
-import { useState } from "react";
+import { Toast, ToastMessage } from "primereact/toast";
 
 const Home: NextPage = () => {
   const [checked, setChecked] = useState(false);
+  const [email, setEmail] = useState<string>("");
   const [keywords, setKeywords] = useState<string[]>([]);
+  const [keywordsBackup, setKeywordsBackup] = useState<string[]>([]);
+  const [sending, setSending] = useState(false);
+  const toast = useRef<Toast>(null);
 
   const handleKeywordsChange = (values: string[]) =>
     setKeywords(values.map((v) => v.toLocaleLowerCase()));
 
-  const handleSubscribeClick = () => {
-    console.log("handleSubscribeClick");
+  const handleAllKeywordsChecked = (value: boolean) => {
+    if (value) {
+      setKeywordsBackup([...keywords]);
+      setKeywords(["*"]);
+    } else setKeywords([...keywordsBackup]);
+    setChecked(value);
+  };
+
+  const handleSubscribeClick = async () => {
+    setSending(true);
+    try {
+      const response = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, keywords }),
+      });
+      const { ok, status } = response;
+      const toastMessage: ToastMessage =
+        ok && status === 202
+          ? {
+              severity: "success",
+              summary: "Inscrição com sucesso!",
+              detail:
+                "Sua inscrição foi realizada com sucesso! Por gentileza, confira se você recebeu nosso e-mail de validação.",
+              life: 10000,
+            }
+          : {
+              severity: "error",
+              summary: "Erro na inscrição!",
+              detail:
+                "Sua inscrição não pôde ser finalizada! Por gentileza, verifique os dados preenchidos.",
+              life: 10000,
+            };
+
+      toast.current?.show(toastMessage);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSending(false);
+    }
   };
 
   const head = () => (
@@ -28,9 +73,9 @@ const Home: NextPage = () => {
   );
 
   const hero = () => (
-    <div className="grid grid-nogutter surface-0 text-800">
-      <div className="col-12 md:col-6 p-6 text-center md:text-left flex align-items-center ">
-        <section>
+    <section className="grid grid-nogutter surface-0 text-800">
+      <div className="col-12 md:col-6 p-6 text-center md:text-left flex align-items-center">
+        <div>
           <div className="block text-5xl font-bold mb-1">
             Boletim Diário - Rio Preto
           </div>
@@ -39,21 +84,23 @@ const Home: NextPage = () => {
             Oficial!
           </p>
 
-          <Button
-            label="Inscreva-se"
-            type="button"
-            className="mr-3 p-button-raised"
-          />
-        </section>
+          <a href="#subscribe">
+            <Button
+              label="Inscreva-se"
+              type="button"
+              className="mr-3 p-button-raised"
+            />
+          </a>
+        </div>
       </div>
       <div className="hidden md:inline-block md:col-6 overflow-hidden">
         <figure
           style={{ clipPath: "polygon(8% 0, 100% 0%, 100% 100%, 0 100%)" }}
         >
-          <Image src={flagImage} alt="Bandeira de São José do Rio Preto-SP" />
+          <Image src={heroImage} alt="Bandeira de São José do Rio Preto-SP" />
         </figure>
       </div>
-    </div>
+    </section>
   );
 
   const feature = () => (
@@ -240,7 +287,7 @@ const Home: NextPage = () => {
       {hero()}
       {feature()}
       {/* {stats()} */}
-      <main>
+      <main id="subscribe">
         <div className="flex align-items-center justify-content-center">
           <div className="surface-card p-4 shadow-2 border-round w-full lg:w-6 p-fluid">
             <div className="surface-0 text-700 text-center">
@@ -259,13 +306,20 @@ const Home: NextPage = () => {
               >
                 Email
               </label>
-              <InputText id="email" type="text" className="w-full mb-3" />
+              <InputText
+                id="email"
+                type="email"
+                className="w-full mb-3"
+                required={true}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
 
               <div className="flex align-items-center justify-content-between mb-6">
                 <div className="flex align-items-center">
                   <Checkbox
                     id="all-keywords"
-                    onChange={(e) => setChecked(e.checked)}
+                    onChange={(e) => handleAllKeywordsChecked(e.checked)}
                     checked={checked}
                     className="mr-2"
                   />
@@ -298,9 +352,11 @@ const Home: NextPage = () => {
                 label="Enviar"
                 icon="pi pi-envelope"
                 className="w-full"
+                loading={sending}
                 onClick={handleSubscribeClick}
               />
             </div>
+            <Toast ref={toast} position="bottom-center" />
           </div>
         </div>
       </main>
