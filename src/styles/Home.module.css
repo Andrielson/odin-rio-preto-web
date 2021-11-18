@@ -1,5 +1,6 @@
 .container {
   height: 100vh;
+  min-height: 600px;
   width: 100vw;
   background-color: #eaeaea;
   display: flex;
@@ -56,18 +57,53 @@
 .input_email {
   display: flex;
   flex-direction: column;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.input_email label {
+  font-size: large;
+  margin-bottom: 5px;
+}
+
+.input_email input {
+  padding: 10px;
+  border: none;
+  font-size: large;
+}
+
+.input_radio {
+  padding-bottom: 10px;
+  padding-top: 10px;
 }
 
 .input_keywords {
   display: flex;
+  margin-top: 5px;
 }
 
 .input_keywords input {
+  border: none;
+  font-size: medium;
+  padding: 10px;
   width: 100%;
+  text-transform: lowercase;
 }
 
 .submit {
   text-align: center;
+  margin-top: 20px;
+}
+
+.submit_button {
+  background-color: #72070f;
+  border: none;
+  color: #eaeaea;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 700;
+  font-size: larger;
+  padding: 1rem 3rem;
 }
 
 .message {
@@ -92,5 +128,17 @@
   .subscribe_section {
     width: 95%;
     height: 95%;
+  }
+
+  .subscribe_section h1 {
+    font-size: x-large;
+  }
+
+  .title_1 {
+    font-size: 1.3rem;
+  }
+
+  .title_2 {
+    font-size: 1rem;
   }
 }

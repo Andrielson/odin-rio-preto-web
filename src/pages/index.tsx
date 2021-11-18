@@ -102,7 +102,7 @@ const Home: NextPage = () => {
             <h1>Inscreva-se gratuitamente!</h1>
             <div className={styles.input_email}>
               <label htmlFor="inputEmail">
-                E-mail: <i>(saiba mais)</i>
+                <b>E-mail:</b>
               </label>
               <input
                 id="inputEmail"
@@ -112,7 +112,7 @@ const Home: NextPage = () => {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div>
+            <div className={styles.input_radio}>
               <input
                 id="inputRadioAllPublications"
                 type="radio"
@@ -121,10 +121,10 @@ const Home: NextPage = () => {
                 onClick={() => handleSubscribeToAllChecked(true)}
               />
               <label htmlFor="inputRadioAllPublications">
-                Quero receber todas as publicações
+                <b>Quero receber todas as publicações</b>
               </label>
             </div>
-            <div>
+            <div className={styles.input_radio}>
               <input
                 id="inputRadioByKeywords"
                 type="radio"
@@ -132,7 +132,7 @@ const Home: NextPage = () => {
                 onClick={() => handleSubscribeToAllChecked(false)}
               />
               <label htmlFor="inputRadioByKeywords">
-                Quero escolher as <u>palavras-chave</u>
+                <b>Quero escolher as <u>palavras-chave</u></b>
               </label>
             </div>
             {!subscribeToAll && renderKeywords()}
@@ -140,6 +140,7 @@ const Home: NextPage = () => {
               <button
                 type="submit"
                 onClick={handleSubscribeClick}
+                className={styles.submit_button}
                 disabled={!email || keywords.length === 0}
               >
                 Enviar
