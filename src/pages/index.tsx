@@ -1,26 +1,39 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import React, { useRef, useState } from "react";
-import { Toast, ToastMessage } from "primereact/toast";
+import React, { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
-  const [checked, setChecked] = useState(false);
-  const [email, setEmail] = useState<string>("");
-  const [keywords, setKeywords] = useState<string[]>([]);
+  const [disableSubmit, setDisableSubmit] = useState(true);
+  const [email, setEmail] = useState("");
+  const [keyword, setKeyword] = useState("");
+  const [keywords, setKeywords] = useState<string[]>(["*"]);
   const [keywordsBackup, setKeywordsBackup] = useState<string[]>([]);
   const [sending, setSending] = useState(false);
-  const toast = useRef<Toast>(null);
+  const [subscribeToAll, setSubscribeToAll] = useState(true);
 
-  const handleKeywordsChange = (values: string[]) =>
-    setKeywords(values.map((v) => v.toLocaleLowerCase()));
+  useEffect(
+    () => setDisableSubmit(!email || keywords.length === 0),
+    [email, keywords]
+  );
 
-  const handleAllKeywordsChecked = (value: boolean) => {
+  const handleSubscribeToAllChecked = (value: boolean) => {
     if (value) {
       setKeywordsBackup([...keywords]);
       setKeywords(["*"]);
     } else setKeywords([...keywordsBackup]);
-    setChecked(value);
+    setSubscribeToAll(value);
+  };
+
+  const addKeyword = () => {
+    const lowerCaseValue = keyword.toLocaleLowerCase();
+    if (keywords.includes(lowerCaseValue) || lowerCaseValue.length < 3) return;
+    setKeywords([...keywords, lowerCaseValue]);
+    setKeyword("");
+  };
+
+  const handleKeyPressOnKeywordInput = (key: string) => {
+    if (key === "Enter" && keyword.length > 2) addKeyword();
   };
 
   const handleSubscribeClick = async () => {
@@ -34,30 +47,41 @@ const Home: NextPage = () => {
         body: JSON.stringify({ email, keywords }),
       });
       const { ok, status } = response;
-      const toastMessage: ToastMessage =
-        ok && status === 202
-          ? {
-              severity: "success",
-              summary: "Inscrição com sucesso!",
-              detail:
-                "Sua inscrição foi realizada com sucesso! Por gentileza, confira se você recebeu nosso e-mail de validação.",
-              life: 10000,
-            }
-          : {
-              severity: "error",
-              summary: "Erro na inscrição!",
-              detail:
-                "Sua inscrição não pôde ser finalizada! Por gentileza, verifique os dados preenchidos.",
-              life: 10000,
-            };
-
-      toast.current?.show(toastMessage);
     } catch (error) {
       console.error(error);
     } finally {
       setSending(false);
     }
   };
+
+  const renderKeywords = () => (
+    <>
+      <div className={styles.input_keywords}>
+        <input
+          id="inputKeywords"
+          type="text"
+          placeholder="adicionar palavra-chave"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+          onKeyPress={(e) => handleKeyPressOnKeywordInput(e.key)}
+        />
+        <button
+          type="button"
+          disabled={keyword.length < 3}
+          onClick={() => addKeyword()}
+        >
+          ➕
+        </button>
+      </div>
+      <div>
+        <ul>
+          {keywords.map((k) => (
+            <li key={k}>{k} ❌</li>
+          ))}
+        </ul>
+      </div>
+    </>
+  );
 
   return (
     <>
@@ -74,14 +98,18 @@ const Home: NextPage = () => {
           </div>
         </header>
         <main className={styles.main}>
-          <section className={styles.subscribe_section}>
+          <form className={styles.subscribe_section}>
             <h1>Inscreva-se gratuitamente!</h1>
             <div className={styles.input_email}>
-              <label htmlFor="inputEmail">E-mail:</label>
+              <label htmlFor="inputEmail">
+                E-mail: <i>(saiba mais)</i>
+              </label>
               <input
                 id="inputEmail"
                 type="email"
                 placeholder="digite seu e-mail"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div>
@@ -89,10 +117,11 @@ const Home: NextPage = () => {
                 id="inputRadioAllPublications"
                 type="radio"
                 name="keywords-flag"
-                checked
+                defaultChecked
+                onClick={() => handleSubscribeToAllChecked(true)}
               />
               <label htmlFor="inputRadioAllPublications">
-                Todas as publicações
+                Quero receber todas as publicações
               </label>
             </div>
             <div>
@@ -100,23 +129,24 @@ const Home: NextPage = () => {
                 id="inputRadioByKeywords"
                 type="radio"
                 name="keywords-flag"
+                onClick={() => handleSubscribeToAllChecked(false)}
               />
               <label htmlFor="inputRadioByKeywords">
-                Por palavras-chave <i>help</i>
+                Quero escolher as <u>palavras-chave</u>
               </label>
             </div>
-            <div>
-              <label htmlFor="inputKeywords">Palavras-chave:</label>
-              <div>
-                <input
-                  id="inputKeywords"
-                  type="text"
-                  placeholder="palavras-chave"
-                />
-                <button type="button">✖️</button>
-              </div>
+            {!subscribeToAll && renderKeywords()}
+            <div className={styles.submit}>
+              <button
+                type="submit"
+                onClick={handleSubscribeClick}
+                disabled={!email || keywords.length === 0}
+              >
+                Enviar
+              </button>
             </div>
-          </section>
+            <p className={styles.message}>Sucesso!</p>
+          </form>
         </main>
         <footer className={styles.footer}>
           <h4>Andrielson</h4>
