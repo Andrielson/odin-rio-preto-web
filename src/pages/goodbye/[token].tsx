@@ -2,7 +2,7 @@ import { GetServerSideProps, NextPage } from "next";
 import Image from "next/image";
 import Head from "next/head";
 import removeSubscriberByTokenServiceFactory from "@server/subscribers/services/remove-subscriber-by-token.service";
-import styles from "../../styles/Home.module.css";
+import styles from "../../styles/Temp.module.css";
 
 type Params = {
   token: string;
