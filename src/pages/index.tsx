@@ -1,8 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import GithubIcon from "/public/assets/github-white.png";
 import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
@@ -13,6 +11,8 @@ const Home: NextPage = () => {
   const [keywordsBackup, setKeywordsBackup] = useState<string[]>([]);
   const [sending, setSending] = useState(false);
   const [subscribeToAll, setSubscribeToAll] = useState(true);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showFailureMessage, setShowFailureMessage] = useState(false);
 
   useEffect(
     () => setDisableSubmit(!email || keywords.length === 0),
@@ -55,8 +55,10 @@ const Home: NextPage = () => {
         body: JSON.stringify({ email, keywords }),
       });
       const { ok, status } = response;
-    } catch (error) {
-      console.error(error);
+      if (ok && status === 202) setShowSuccessMessage(true);
+      else setShowFailureMessage(true);
+    } catch (_) {
+      setShowFailureMessage(true);
     } finally {
       setSending(false);
     }
@@ -161,13 +163,11 @@ const Home: NextPage = () => {
               <button
                 type="submit"
                 onClick={handleSubscribeClick}
-                className={styles.submit_button}
-                disabled={!email || keywords.length === 0}
+                disabled={!email || keywords.length === 0 || sending}
               >
-                Enviar
+                {sending ? "Enviando..." : "Enviar"}
               </button>
             </div>
-            <p className={styles.message}>Sucesso!</p>
           </section>
         </main>
         <footer className={styles.footer}>
@@ -183,6 +183,29 @@ const Home: NextPage = () => {
           </h4>
         </footer>
       </div>
+      {showSuccessMessage && (
+        <section className={styles.message_background}>
+          <div className={styles.success_message} role="dialog">
+            <h3>Cadastro efetuado com sucesso!</h3>
+            <p>
+              Por favor, confirme sua inscrição clicando no link que foi enviado
+              por e-mail.
+            </p>
+            <button onClick={() => setShowSuccessMessage(false)}>OK</button>
+          </div>
+        </section>
+      )}
+      {showFailureMessage && (
+        <section className={styles.message_background}>
+          <div className={styles.failure_message} role="dialog">
+            <h3>Falha ao efetuar cadastro!</h3>
+            <p>
+              Por favor, verifique sua conexão com a internet e tente novamente.
+            </p>
+            <button onClick={() => setShowFailureMessage(false)}>OK</button>
+          </div>
+        </section>
+      )}
     </>
   );
 };

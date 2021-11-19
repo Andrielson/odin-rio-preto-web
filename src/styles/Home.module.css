@@ -137,11 +137,12 @@
   text-align: center;
 }
 
-.submit_button {
+.submit button {
   background-color: #72070f;
   border-radius: 4px;
   border: none;
-  color: whitesmoke;
+  color: white;
+  text-transform: capitalize;
   cursor: pointer;
   display: inline-block;
   font-size: larger;
@@ -149,12 +150,82 @@
   padding: 1rem 3rem;
 }
 
-.message {
-  background-color: chartreuse;
-  display: none;
-  position: absolute;
+.message_background {
+  background-color: rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  left: 0;
+  position: fixed;
   top: 0;
-  width: 100%;
+  width: 100vw;
+  z-index: 30;
+}
+
+.success_message {
+  border-radius: 4px;
+  background-color: #fff;
+  width: 30%;
+  height: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0rem 1rem 1rem 1rem;
+}
+
+.success_message p {
+  font-size: large;
+  font-weight: 500;
+  line-height: 1.75rem;
+  text-align: center;
+}
+
+.success_message button {
+  background-color: transparent;
+  border-radius: 4px;
+  border: 2px solid #72070f;
+  color: #72070f;
+  cursor: pointer;
+  font-size: large;
+  font-weight: 700;
+  padding: 0.5rem 3rem;
+  text-align: justify;
+}
+
+.failure_message {
+  align-items: center;
+  background-color: #72070f;
+  border-radius: 4px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  height: 30%;
+  justify-content: space-between;
+  padding: 0rem 1rem 1rem 1rem;
+  width: 30%;
+}
+
+.failure_message p {
+  font-size: large;
+  font-weight: 500;
+  line-height: 1.75rem;
+  text-align: center;
+}
+
+.failure_message button {
+  background-color: white;
+  border-radius: 4px;
+  border: 2px solid #72070f;
+  color: #72070f;
+  cursor: pointer;
+  font-size: large;
+  font-weight: 700;
+  padding: 0.5rem 3rem;
+  text-align: justify;
 }
 
 .footer {
@@ -164,25 +235,35 @@
   display: flex;
   height: 80px;
   justify-content: center;
-  margin-top: 3rem;
   width: 100%;
 }
 
 @media (max-width: 600px) {
-  .subscribe_section {
-    width: 95%;
-    height: 95%;
-  }
-
-  .subscribe_section h1 {
-    font-size: x-large;
-  }
-
   .title_1 {
     font-size: 1.3rem;
   }
 
   .title_2 {
     font-size: 1rem;
+  }
+
+  .subscribe_section {
+    height: 100%;
+    padding: 0rem 1rem 2rem 1rem;
+    width: 100%;
+  }
+
+  .subscribe_section h1 {
+    font-size: x-large;
+  }
+
+  .success_message {
+    width: 90%;
+    height: 40%;
+  }
+
+  .failure_message {
+    width: 90%;
+    height: 40%;
   }
 }
