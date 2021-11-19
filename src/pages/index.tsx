@@ -1,6 +1,8 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import GithubIcon from "/public/assets/github-white.png";
 import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
@@ -19,21 +21,27 @@ const Home: NextPage = () => {
 
   const handleSubscribeToAllChecked = (value: boolean) => {
     if (value) {
-      setKeywordsBackup([...keywords]);
+      setKeywordsBackup([...keywords.filter((it) => it !== "*")]);
       setKeywords(["*"]);
     } else setKeywords([...keywordsBackup]);
     setSubscribeToAll(value);
   };
 
   const addKeyword = () => {
-    const lowerCaseValue = keyword.toLocaleLowerCase();
+    const lowerCaseValue = keyword.trim().toLocaleLowerCase();
     if (keywords.includes(lowerCaseValue) || lowerCaseValue.length < 3) return;
-    setKeywords([...keywords, lowerCaseValue]);
+    setKeywords(
+      [...keywords, lowerCaseValue].sort((a, b) => a.localeCompare(b))
+    );
     setKeyword("");
   };
 
+  const delKeyword = (value: string) => {
+    setKeywords([...keywords.filter((it) => it !== value)]);
+  };
+
   const handleKeyPressOnKeywordInput = (key: string) => {
-    if (key === "Enter" && keyword.length > 2) addKeyword();
+    if (key === "Enter" && keyword.trim().length > 2) addKeyword();
   };
 
   const handleSubscribeClick = async () => {
@@ -65,18 +73,25 @@ const Home: NextPage = () => {
           onChange={(e) => setKeyword(e.target.value)}
           onKeyPress={(e) => handleKeyPressOnKeywordInput(e.key)}
         />
-        <button
-          type="button"
-          disabled={keyword.length < 3}
-          onClick={() => addKeyword()}
-        >
-          ➕
-        </button>
+        {keyword.trim().length > 2 && (
+          <button
+            type="button"
+            disabled={keyword.trim().length < 3}
+            onClick={() => addKeyword()}
+          >
+            +
+          </button>
+        )}
       </div>
       <div>
-        <ul>
+        <ul className={styles.list_keywords}>
           {keywords.map((k) => (
-            <li key={k}>{k} ❌</li>
+            <li key={k} className={styles.keyword_item}>
+              <i>{k}</i>
+              <button type="button" onClick={() => delKeyword(k)}>
+                [remover]
+              </button>
+            </li>
           ))}
         </ul>
       </div>
@@ -98,11 +113,14 @@ const Home: NextPage = () => {
           </div>
         </header>
         <main className={styles.main}>
-          <form className={styles.subscribe_section}>
+          <section className={styles.subscribe_section}>
             <h1>Inscreva-se gratuitamente!</h1>
             <div className={styles.input_email}>
               <label htmlFor="inputEmail">
                 <b>E-mail:</b>
+                <button type="button" className={styles.keywords_help_button}>
+                  ?
+                </button>
               </label>
               <input
                 id="inputEmail"
@@ -132,7 +150,10 @@ const Home: NextPage = () => {
                 onClick={() => handleSubscribeToAllChecked(false)}
               />
               <label htmlFor="inputRadioByKeywords">
-                <b>Quero escolher as <u>palavras-chave</u></b>
+                <b>Quero escolher as palavras-chave</b>
+                <button type="button" className={styles.keywords_help_button}>
+                  ?
+                </button>
               </label>
             </div>
             {!subscribeToAll && renderKeywords()}
@@ -147,10 +168,19 @@ const Home: NextPage = () => {
               </button>
             </div>
             <p className={styles.message}>Sucesso!</p>
-          </form>
+          </section>
         </main>
         <footer className={styles.footer}>
-          <h4>Andrielson</h4>
+          <h4>
+            &copy;{" "}
+            <a
+              href="https://github.com/andrielson/odin-rio-preto-web"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Andrielson Silva
+            </a>
+          </h4>
         </footer>
       </div>
     </>
