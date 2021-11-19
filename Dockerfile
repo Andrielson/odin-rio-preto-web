@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # Install dependencies only when needed
-FROM node:lts-alpine3.14 AS installer
+FROM node:14-alpine3.14 AS installer
 
 RUN apk add --no-cache libc6-compat
 
@@ -12,7 +12,7 @@ RUN yarn install --frozen-lockfile
 
 ################################################################################
 # Rebuild the source code only when needed
-FROM node:lts-alpine3.14 AS builder
+FROM node:14-alpine3.14 AS builder
 
 WORKDIR /usr/local/src
 
@@ -24,7 +24,7 @@ RUN --mount=type=secret,id=envlocal,dst=./.env.local yarn build && yarn install 
 
 ################################################################################
 # Production image, copy all the files and run next
-FROM node:lts-alpine3.14 AS runner
+FROM node:14-alpine3.14 AS runner
 
 WORKDIR /srv
 
