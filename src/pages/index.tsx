@@ -124,7 +124,8 @@ const Home: NextPage = () => {
             <input
               id="inputEmail"
               type="email"
-              placeholder="digite seu e-mail"
+              placeholder="digite um e-mail válido"
+              required={true}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
