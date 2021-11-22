@@ -1,0 +1,36 @@
+.header {
+  background-color: #72070f;
+  display: flex;
+  height: 100px;
+  justify-content: center;
+  width: 100%;
+}
+
+.title_box {
+  align-items: center;
+  color: #f1f1f1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+}
+
+.title_1 {
+  margin: 0;
+  padding: 0;
+}
+
+.title_2 {
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 600px) {
+  .title_1 {
+    font-size: 1.3rem;
+  }
+
+  .title_2 {
+    font-size: 1rem;
+  }
+}
