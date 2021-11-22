@@ -8,8 +8,7 @@ export default function recaptchaGuardFactory(
   const contentType = "application/x-www-form-urlencoded; charset=utf-8";
   const headers = { "Content-Type": contentType };
   const method = "POST";
-  const url = "https://www.google.com/recaptcha/api/siteverify";
-  const { enabled, secretKey } = config;
+  const { enabled, secretKey, url } = config;
 
   const canActivate = async (request: NextApiRequest) => {
     if (!enabled) return true;

@@ -5,4 +5,5 @@ interface RecaptchaPageConfig {
 interface RecaptchaServerConfig {
     enabled: boolean;
     secretKey: string;
+    url: string;
 }
