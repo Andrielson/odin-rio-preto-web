@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import Script from "next/script";
 import React, { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 
@@ -12,6 +13,7 @@ const Home: NextPage = () => {
   const [subscribeToAll, setSubscribeToAll] = useState(true);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showFailureMessage, setShowFailureMessage] = useState(false);
+  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!;
 
   useEffect(
     () => setDisableSubmit(!email || keywords.length === 0 || sending),
@@ -45,22 +47,26 @@ const Home: NextPage = () => {
 
   const handleSubscribeClick = async () => {
     setSending(true);
-    try {
-      const response = await fetch("/api/subscribe", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, keywords }),
-      });
-      const { ok, status } = response;
-      if (ok && status === 202) setShowSuccessMessage(true);
-      else setShowFailureMessage(true);
-    } catch (_) {
-      setShowFailureMessage(true);
-    } finally {
-      setSending(false);
-    }
+    grecaptcha.ready(async () => {
+      try {
+        const token = await grecaptcha.execute(siteKey, { action: "submit" });
+        const response = await fetch("/api/subscribe", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ email, keywords }),
+        });
+        const { ok, status } = response;
+        if (ok && status === 201) setShowSuccessMessage(true);
+        else setShowFailureMessage(true);
+      } catch (_) {
+        setShowFailureMessage(true);
+      } finally {
+        setSending(false);
+      }
+    });
   };
 
   const renderKeywords = () => (
@@ -101,6 +107,10 @@ const Home: NextPage = () => {
 
   return (
     <>
+      <Script
+        src={`https://www.google.com/recaptcha/api.js?trustedtypes=true&render=${siteKey}`}
+        strategy="beforeInteractive"
+      />
       <main className={styles.main}>
         <section className={styles.subscribe_section}>
           <h1>Inscreva-se gratuitamente!</h1>
