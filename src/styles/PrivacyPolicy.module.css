@@ -27,3 +27,7 @@
   border: 1px solid #ddd;
   padding: 8px;
 }
+
+.roman {
+  list-style-type: upper-roman;
+}

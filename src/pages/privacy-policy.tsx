@@ -28,7 +28,7 @@ const PrivacyPolicy: NextPage = () => {
           </p>
           <p>
             Dessa forma, a Boletim Diário, doravante denominada simplesmente
-            como "Boletim Diário", inscrita no CNPJ/MF sob o nº
+            como &quot;Boletim Diário&quot;, inscrita no CNPJ/MF sob o nº
             30.453.497/0001-64, no papel de Controladora de Dados, obriga-se ao
             disposto na presente <b>Política de Privacidade</b>.
           </p>
@@ -137,7 +137,7 @@ const PrivacyPolicy: NextPage = () => {
             A partir do consentimento para o tratamento de dados, as suas
             informações são coletadas pelo Boletim Diário da seguinte forma:
           </p>
-          <ol>
+          <ol className={styles.roman}>
             <li>
               <b>
                 Quando você completa o preenchimento de seu cadastro na
@@ -274,7 +274,7 @@ const PrivacyPolicy: NextPage = () => {
             bases de dados ou anonimizados, ressalvadas as hipóteses legalmente
             previstas no artigo 16 lei geral de proteção de dados, a saber:
           </p>
-          <ol>
+          <ol className={styles.roman}>
             <li>
               cumprimento de obrigação legal ou regulatória pelo controlador;
             </li>
@@ -385,11 +385,61 @@ const PrivacyPolicy: NextPage = () => {
             </i>
           </p>
           <ul>
-            <li>Vercel</li>
-            <li>Google</li>
-            <li>Mongo Atlas</li>
-            <li>Gitlab</li>
-            <li>Yandex</li>
+            <li>
+              <a
+                href="https://policies.google.com/privacy?gl=BR&hl=pt"
+                target="_blank"
+                rel="noopener noreferrer"
+              ><b>Google</b></a>
+            </li>
+            <li>
+              <a
+                href="https://vercel.com/legal/privacy-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <b>Vercel</b>
+              </a>
+              <small>
+                <i> (em inglês)</i>
+              </small>
+            </li>
+            <li>
+              <a
+                href="https://www.mongodb.com/legal/privacy-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <b>MongoDB</b>
+              </a>
+              <small>
+                <i> (em inglês)</i>
+              </small>
+            </li>
+            <li>
+              <a
+                href="https://about.gitlab.com/privacy/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <b>Gitlab</b>
+              </a>
+              <small>
+                <i> (em inglês)</i>
+              </small>
+            </li>
+            <li>
+              <a
+                href="https://yandex.com/legal/confidential/?lang=en"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <b>Yandex</b>
+              </a>
+              <small>
+                <i> (em inglês)</i>
+              </small>
+            </li>
           </ul>
           <p>
             <i>
@@ -397,7 +447,7 @@ const PrivacyPolicy: NextPage = () => {
               poderão ser compartilhados, que são:
             </i>
           </p>
-          <ol>
+          <ol className={styles.roman}>
             <li>
               Determinação legal, requerimento, requisição ou ordem judicial,
               com autoridades judiciais, administrativas ou governamentais
