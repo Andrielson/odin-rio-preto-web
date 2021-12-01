@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import Script from "next/script";
 import React, { useEffect, useState } from "react";
+import Layout from "../components/layout";
 import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
@@ -106,92 +107,95 @@ const Home: NextPage = () => {
   );
 
   return (
-    <>
-      <Script
-        src={`https://www.google.com/recaptcha/api.js?trustedtypes=true&render=${siteKey}`}
-        strategy="beforeInteractive"
-      />
-      <main className={styles.main}>
-        <section className={styles.subscribe_section}>
-          <h1>Inscreva-se gratuitamente!</h1>
-          <div className={styles.input_email}>
-            <label htmlFor="inputEmail">
-              <b>E-mail:</b>
-              <button type="button" className={styles.keywords_help_button}>
-                ?
+    <Layout>
+      <>
+        <Script
+          src={`https://www.google.com/recaptcha/api.js?trustedtypes=true&render=${siteKey}`}
+          strategy="beforeInteractive"
+        />
+        <main className={styles.main}>
+          <section className={styles.subscribe_section}>
+            <h1>Inscreva-se gratuitamente!</h1>
+            <div className={styles.input_email}>
+              <label htmlFor="inputEmail">
+                <b>E-mail:</b>
+                <button type="button" className={styles.keywords_help_button}>
+                  ?
+                </button>
+              </label>
+              <input
+                id="inputEmail"
+                type="email"
+                placeholder="digite um e-mail válido"
+                required={true}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className={styles.input_radio}>
+              <input
+                id="inputRadioAllPublications"
+                type="radio"
+                name="keywords-flag"
+                defaultChecked
+                onClick={() => handleSubscribeToAllChecked(true)}
+              />
+              <label htmlFor="inputRadioAllPublications">
+                <b>Quero receber todas as publicações</b>
+              </label>
+            </div>
+            <div className={styles.input_radio}>
+              <input
+                id="inputRadioByKeywords"
+                type="radio"
+                name="keywords-flag"
+                onClick={() => handleSubscribeToAllChecked(false)}
+              />
+              <label htmlFor="inputRadioByKeywords">
+                <b>Quero escolher as palavras-chave</b>
+                <button type="button" className={styles.keywords_help_button}>
+                  ?
+                </button>
+              </label>
+            </div>
+            {!subscribeToAll && renderKeywords()}
+            <div className={styles.submit}>
+              <button
+                type="submit"
+                onClick={handleSubscribeClick}
+                disabled={disableSubmit}
+              >
+                {sending ? "Enviando..." : "Enviar"}
               </button>
-            </label>
-            <input
-              id="inputEmail"
-              type="email"
-              placeholder="digite um e-mail válido"
-              required={true}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className={styles.input_radio}>
-            <input
-              id="inputRadioAllPublications"
-              type="radio"
-              name="keywords-flag"
-              defaultChecked
-              onClick={() => handleSubscribeToAllChecked(true)}
-            />
-            <label htmlFor="inputRadioAllPublications">
-              <b>Quero receber todas as publicações</b>
-            </label>
-          </div>
-          <div className={styles.input_radio}>
-            <input
-              id="inputRadioByKeywords"
-              type="radio"
-              name="keywords-flag"
-              onClick={() => handleSubscribeToAllChecked(false)}
-            />
-            <label htmlFor="inputRadioByKeywords">
-              <b>Quero escolher as palavras-chave</b>
-              <button type="button" className={styles.keywords_help_button}>
-                ?
-              </button>
-            </label>
-          </div>
-          {!subscribeToAll && renderKeywords()}
-          <div className={styles.submit}>
-            <button
-              type="submit"
-              onClick={handleSubscribeClick}
-              disabled={disableSubmit}
-            >
-              {sending ? "Enviando..." : "Enviar"}
-            </button>
-          </div>
-        </section>
-      </main>
-      {showSuccessMessage && (
-        <section className={styles.message_background}>
-          <div className={styles.success_message} role="dialog">
-            <h3>Cadastro efetuado com sucesso!</h3>
-            <p>
-              Por favor, confirme sua inscrição clicando no link que foi enviado
-              por e-mail.
-            </p>
-            <button onClick={() => setShowSuccessMessage(false)}>OK</button>
-          </div>
-        </section>
-      )}
-      {showFailureMessage && (
-        <section className={styles.message_background}>
-          <div className={styles.failure_message} role="dialog">
-            <h3>Falha ao efetuar cadastro!</h3>
-            <p>
-              Por favor, verifique sua conexão com a internet e tente novamente.
-            </p>
-            <button onClick={() => setShowFailureMessage(false)}>OK</button>
-          </div>
-        </section>
-      )}
-    </>
+            </div>
+          </section>
+        </main>
+        {showSuccessMessage && (
+          <section className={styles.message_background}>
+            <div className={styles.success_message} role="dialog">
+              <h3>Cadastro efetuado com sucesso!</h3>
+              <p>
+                Por favor, confirme sua inscrição clicando no link que foi
+                enviado por e-mail.
+              </p>
+              <button onClick={() => setShowSuccessMessage(false)}>OK</button>
+            </div>
+          </section>
+        )}
+        {showFailureMessage && (
+          <section className={styles.message_background}>
+            <div className={styles.failure_message} role="dialog">
+              <h3>Falha ao efetuar cadastro!</h3>
+              <p>
+                Por favor, verifique sua conexão com a internet e tente
+                novamente.
+              </p>
+              <button onClick={() => setShowFailureMessage(false)}>OK</button>
+            </div>
+          </section>
+        )}
+      </>
+    </Layout>
   );
 };
 
