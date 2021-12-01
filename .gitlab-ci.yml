@@ -14,7 +14,7 @@ default:
       - .yarn-cache/
       - node_modules/
   tags:
-    - contabo
+    - andrielson
 
 install-dependencies:
   stage: .pre
