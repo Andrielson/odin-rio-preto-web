@@ -1,5 +1,6 @@
 import { GetServerSideProps, NextPage } from "next";
 import verifySubscriberByTokenServiceFactory from "@server/subscribers/services/verify-subscriber-by-token.service";
+import Layout from "../../components/layout";
 import styles from "../../styles/Temp.module.css";
 
 type Params = {
@@ -29,10 +30,12 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async (
 };
 
 const Welcome: NextPage<Props> = () => (
-  <main className={styles.main}>
-    <p className={styles.description}>
-      Parabéns! Sua inscrição foi confirmada com sucesso!
-    </p>
-  </main>
+  <Layout>
+    <main className={styles.main}>
+      <p className={styles.description}>
+        Parabéns! Sua inscrição foi confirmada com sucesso!
+      </p>
+    </main>
+  </Layout>
 );
 export default Welcome;
