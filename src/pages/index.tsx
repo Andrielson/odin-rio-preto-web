@@ -119,9 +119,6 @@ const Home: NextPage = () => {
             <div className={styles.input_email}>
               <label htmlFor="inputEmail">
                 <b>E-mail:</b>
-                <button type="button" className={styles.keywords_help_button}>
-                  ?
-                </button>
               </label>
               <input
                 id="inputEmail"
@@ -153,9 +150,6 @@ const Home: NextPage = () => {
               />
               <label htmlFor="inputRadioByKeywords">
                 <b>Quero escolher as palavras-chave</b>
-                <button type="button" className={styles.keywords_help_button}>
-                  ?
-                </button>
               </label>
             </div>
             {!subscribeToAll && renderKeywords()}
